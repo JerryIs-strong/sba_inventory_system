@@ -61,6 +61,8 @@ def update():
             new_quantity = int(input("Updated quantity: "))
             inventory[item_name] = new_quantity
             print(f"[Info] Updated the quantity of {item_name} to {new_quantity}.")
+        case _:
+            print("[Error] Invalid option.")
 
 def main():
     while True:
@@ -77,7 +79,6 @@ def main():
                 break
             case _:
                 print("Invalid action.")
-                action = int(input("Choose an action: "))
 
 if __name__ == '__main__':
     main()
