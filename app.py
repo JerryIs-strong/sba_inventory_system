@@ -39,11 +39,8 @@ def management():
         print(tabulate(total_inventory, headers=["code", "Item name"], tablefmt="simple_grid"))
         item_code = int(input("Which item do you want to remove: "))
         item_name = total_inventory[item_code][1]
-        if item_name in inventory:
-            del inventory[item_name]
-            print(f"[Info] {item_name} have been removed.")
-        else:
-            print("[Error] The item is not exit.")
+        del inventory[item_name]
+        print(f"[Info] {item_name} have been removed.")
     main()
 
 def view():
