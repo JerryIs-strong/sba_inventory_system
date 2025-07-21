@@ -4,20 +4,19 @@ inventory = {
     "We are": 100,
     "HER": 100,
     "I SWAY": 100,
-    "YUQ1": -999
+    "YUQ1": 20
 }
 
 def menu():
-    command = [[1,"Inventory Management: add or remove item(s) inside this system"],[2,"View Inventory: Check the inventory quantity of each item"],[3,"Update the inventory quantity of a specific item"],[4,"Exit"]]
-    print(tabulate(command, headers=["code","describe"], tablefmt="simple_grid"))
+    command = [[1,"Inventory Management: add or remove item(s) inside this system"],[2,"View Inventory: Check the inventory quantity of each item"],[3,"Update Inventory: Update the inventory quantity of a specific item"],[4,"Search: Searching a specific item from inventory"],[5,"Exit"]]
+    print(tabulate(command, headers=["Code","Describe"], tablefmt="simple_grid"))
 
 def getItems(detail = False):
     result = []
     index = 0
     for item, quantity in inventory.items():
         if detail:
-            result.append([index, item, quantity])
-            index += 1
+            result.append([item, quantity])
         else:
             result.append([index, item])
             index += 1
@@ -28,45 +27,61 @@ def management():
     print("[2] Remove item")
     action = int(input("Choose an action: "))
     if action == 1:
-        item_name = input("Which item do you want to add: ")
-        if item_name in inventory:
-            print("[Info] Item already exit.")
-        else:
-            inventory[item_name] = 0
-            print(f'[Info] Added item {item_name} with quantity 0.')
+        item = input("Which item do you want to add(type 'item_name:quantity' for adding item and quantity, use ' ' to split for batch update): ")
+        # if item_name in inventory:
+        #     print("[Info] Item already exit.")
+        # else:
+        #     inventory[item_name] = 0
+        #     print(f'[Info] Added item {item_name} with quantity 0.')
+        items = item.split()
+        for i in range(len(item)):
+            item_name, quantity = items.split(':')
+
+
     elif action == 2:
         total_inventory = getItems(False)
-        print(tabulate(total_inventory, headers=["code", "Item name"], tablefmt="simple_grid"))
-        item_code = int(input("Which item do you want to remove: "))
-        item_name = total_inventory[item_code][1]
-        del inventory[item_name]
-        print(f"[Info] {item_name} have been removed.")
-    main()
+        print(tabulate(total_inventory, headers=["Code", "Item name"], tablefmt="simple_grid"))
+        try:
+            item_code = input("Which item do you want to remove(use ' ' to split for batch update): ")
+            item_codes = item_code.split()
+            if len(item_codes) > 0:
+                for i in range(len(item_codes)):
+                    item_name = total_inventory[int(item_codes[i])][1]
+                    del inventory[item_name]
+                    print(f"[Info] {item_name} have been removed.")
+        except IndexError:
+            print("[Error] Value out of range.")
+            
 
 def view():
     print(tabulate(getItems(True), headers=["Item", "Quantity"], tablefmt="psql"))
 
 def update():
     total_inventory = getItems(False)
-    print(tabulate(total_inventory, headers=["code", "Item name"], tablefmt="simple_grid"))
-    item_code = int(input("Which item do you want to update: "))
-    item_name = total_inventory[item_code][1]
-    type = int(input("Which info you want to update [0]Item name [1]Quantity: "))
-    match type:
-        case 0:
-            new_name = input("Updated item name: ")
-            inventory[new_name] = inventory.pop(item_name)
-            print(f"[Info] Updated the name of {item_name} to {new_name}.")
-        case 1:
-            new_quantity = int(input("Updated quantity: "))
-            inventory[item_name] = new_quantity
-            print(f"[Info] Updated the quantity of {item_name} to {new_quantity}.")
-        case _:
-            print("[Error] Invalid option.")
+    print(tabulate(total_inventory, headers=["Code", "Item name"], tablefmt="simple_grid"))  
+    try:
+        item_code = int(input("Which item do you want to update: "))
+        item_name = total_inventory[item_code][1]
+        type = int(input("Which info you want to update [0]Item name [1]Quantity: "))
+        match type:
+            case 0:
+                new_name = input("Updated item name: ")
+                inventory[new_name] = inventory.pop(item_name)
+                print(f"[Info] Updated the name of {item_name} to {new_name}.")
+            case 1:
+                new_quantity = int(input("Updated quantity: "))
+                inventory[item_name] = new_quantity
+                print(f"[Info] Updated the quantity of {item_name} to {new_quantity}.")
+            case _:
+                print("[Error] Invalid option.")
+    except IndexError:
+        print("[Error] Value out of range.")
+        
+def searc
 
 def main():
+    menu()
     while True:
-        menu()
         action = int(input("Choose an action: "))
         match action:
             case 1:
@@ -76,6 +91,8 @@ def main():
             case 3:
                 update()
             case 4:
+                search()
+            case 5:
                 break
             case _:
                 print("Invalid action.")
