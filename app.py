@@ -77,8 +77,6 @@ def update():
     except IndexError:
         print("[Error] Value out of range.")
         
-def search():
-    print("jerry is gay")
 
 def main():
     menu()
