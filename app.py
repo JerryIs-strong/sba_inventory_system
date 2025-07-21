@@ -1,14 +1,14 @@
 from tabulate import tabulate
 
 inventory = {
-    "We are": 100,
+    "We_are": 100,
     "HER": 100,
-    "I SWAY": 100,
+    "I_SWAY": 100,
     "YUQ1": 20
 }
 
 def menu():
-    command = [[1,"Inventory Management: add or remove item(s) inside this system"],[2,"View Inventory: Check the inventory quantity of each item"],[3,"Update Inventory: Update the inventory quantity of a specific item"],[4,"Search: Searching a specific item from inventory"],[5,"Exit"]]
+    command = [[1,"Inventory Management: add or remove item(s) inside this system\n- type item_name:quantity for adding item and quantity\n- use ' ' to split for batch update"],[2,"View Inventory: Check the inventory quantity of each item"],[3,"Update Inventory: Update the inventory quantity of a specific item"],[4,"Search: Searching a specific item from inventory"],[5,"Exit"]]
     print(tabulate(command, headers=["Code","Describe"], tablefmt="simple_grid"))
 
 def getItems(detail = False):
@@ -27,22 +27,28 @@ def management():
     print("[2] Remove item")
     action = int(input("Choose an action: "))
     if action == 1:
-        item = input("Which item do you want to add(type 'item_name:quantity' for adding item and quantity, use ' ' to split for batch update): ")
-        # if item_name in inventory:
-        #     print("[Info] Item already exit.")
-        # else:
-        #     inventory[item_name] = 0
-        #     print(f'[Info] Added item {item_name} with quantity 0.')
+        item = input("Which item do you want to add: ")
         items = item.split()
-        for i in range(len(item)):
-            item_name, quantity = items.split(':')
-
+        for i in range(len(items)):
+            if ':' in items[i]:
+                if items[i] in inventory:
+                    print("[Info] Item already exit.")
+                else:
+                    item_name, quantity = items[i].split(':')
+                    inventory[item_name] = quantity
+                    print(f'[Info] Added item {item_name} with quantity {quantity}.')
+            else:
+                if items[i] in inventory:
+                    print("[Info] Item already exit.")
+                else:
+                    inventory[item_name] = 0
+                    print(f'[Info] Added item {item_name} with quantity 0.')
 
     elif action == 2:
         total_inventory = getItems(False)
         print(tabulate(total_inventory, headers=["Code", "Item name"], tablefmt="simple_grid"))
         try:
-            item_code = input("Which item do you want to remove(use ' ' to split for batch update): ")
+            item_code = input("Which item do you want to remove: ")
             item_codes = item_code.split()
             if len(item_codes) > 0:
                 for i in range(len(item_codes)):
@@ -76,7 +82,14 @@ def update():
                 print("[Error] Invalid option.")
     except IndexError:
         print("[Error] Value out of range.")
-        
+
+def search():
+    total_inventory = getItems(True)
+    aka = input("Which item you want to search: ")
+    for i in range(len(total_inventory)):
+        if aka in total_inventory[i][0]:
+            return tabulate([total_inventory[i]], headers=["Item", "Quantity"], tablefmt="psql")
+    return "Not found."
 
 def main():
     menu()
@@ -90,7 +103,7 @@ def main():
             case 3:
                 update()
             case 4:
-                search()
+                print(search())
             case 5:
                 break
             case _:
