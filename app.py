@@ -116,8 +116,8 @@ def quitNow():
         case "y":
             with open('./data/inventoryDB.json', 'w') as file:
                 json.dump(inventory, file)
-            file.close()
             print("[Info]: Update database successfully.")
+            um.log(f"[Update Inventory]: Inventory updated")
             itg.writeMD5()
         case "n":
             return
