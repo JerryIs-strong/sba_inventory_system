@@ -1,14 +1,20 @@
 from tabulate import tabulate
+import json
+import module.integrity as itg
+import pandas as pd
+from datetime import datetime
+import os
+import module.userManagement as um
 
-inventory = {
-    "We_are": 100,
-    "HER": 100,
-    "I_SWAY": 100,
-    "YUQ1": 20
-}
+inventory = {}
+
+def loadDB():
+    global inventory
+    with open('./data/inventoryDB.json', 'r') as file:
+        inventory = json.load(file)
 
 def menu():
-    command = [[1,"Inventory Management: add or remove item(s) inside this system\n- type item_name:quantity for adding item and quantity\n- use ' ' to split for batch update"],[2,"View Inventory: Check the inventory quantity of each item"],[3,"Update Inventory: Update the inventory quantity of a specific item"],[4,"Search: Searching a specific item from inventory"],[5,"Exit"]]
+    command = [[1,"Inventory Management: add or remove item(s) inside this system\n- type item_name:quantity for adding item and quantity\n- use ' ' to split for batch update"],[2,"View Inventory: Check the inventory quantity of each item"],[3,"Update Inventory: Update the inventory quantity of a specific item"],[4,"Search: Searching a specific item from inventory"],[5, "Export: Export data as .csv"],[6,"Exit: Quit this systeme"]]
     print(tabulate(command, headers=["Code","Describe"], tablefmt="simple_grid"))
 
 def getItems(detail = False):
@@ -37,12 +43,14 @@ def management():
                     item_name, quantity = items[i].split(':')
                     inventory[item_name] = quantity
                     print(f'[Info] Added item {item_name} with quantity {quantity}.')
+                    um.log(f"[Inventory Management]: Added item {item_name} with quantity {quantity}")
             else:
                 if items[i] in inventory:
                     print("[Info] Item already exit.")
                 else:
-                    inventory[item_name] = 0
-                    print(f'[Info] Added item {item_name} with quantity 0.')
+                    inventory[items[i]] = 0
+                    print(f'[Info] Added item {items[i]} with quantity 0')
+                    um.log(f"[Inventory Management]: Added item {items[i]} with quantity 0")
 
     elif action == 2:
         total_inventory = getItems(False)
@@ -55,12 +63,13 @@ def management():
                     item_name = total_inventory[int(item_codes[i])][1]
                     del inventory[item_name]
                     print(f"[Info] {item_name} have been removed.")
+                    um.log(f"[Inventory Management]: {item_name} have been removed")
         except IndexError:
             print("[Error] Value out of range.")
-            
 
 def view():
     print(tabulate(getItems(True), headers=["Item", "Quantity"], tablefmt="psql"))
+    um.log(f"[View Inventory]: get inventory")
 
 def update():
     total_inventory = getItems(False)
@@ -74,10 +83,12 @@ def update():
                 new_name = input("Updated item name: ")
                 inventory[new_name] = inventory.pop(item_name)
                 print(f"[Info] Updated the name of {item_name} to {new_name}.")
+                um.log(f"[Update Inventory]: Updated the name of {item_name} to {new_name}")
             case 1:
                 new_quantity = int(input("Updated quantity: "))
                 inventory[item_name] = new_quantity
                 print(f"[Info] Updated the quantity of {item_name} to {new_quantity}.")
+                um.log(f"[Update Inventory]: Updated the quantity of {item_name} to {new_quantity}")
             case _:
                 print("[Error] Invalid option.")
     except IndexError:
@@ -91,7 +102,28 @@ def search():
             return tabulate([total_inventory[i]], headers=["Item", "Quantity"], tablefmt="psql")
     return "Not found."
 
+def export():
+    df = pd.DataFrame(list(inventory.items()), columns=['Item_name', 'Quantity'])
+    current_date = datetime.now().strftime("%d_%m_%Y")
+    file_name = f'exported_data_{current_date}.csv'
+    file_path = os.path.join('exports', file_name)
+    df.to_csv(file_path, index=False)
+    um.log(f"[Export Inventory]: Inventory exported")
+
+def quitNow():
+    aka = input("Would you like to save the change Yes[Y] No[N]: ")
+    match aka.lower():
+        case "y":
+            with open('./data/inventoryDB.json', 'w') as file:
+                json.dump(inventory, file)
+            file.close()
+            print("[Info]: Update database successfully.")
+            itg.writeMD5()
+        case "n":
+            return
+
 def main():
+    loadDB()
     menu()
     while True:
         action = int(input("Choose an action: "))
@@ -105,9 +137,15 @@ def main():
             case 4:
                 print(search())
             case 5:
+                export()
+            case 6:
+                quitNow()
                 break
             case _:
                 print("Invalid action.")
 
 if __name__ == '__main__':
-    main()
+    if itg.verifyMD5():
+        main()
+    else:
+        print("[Error]: Database integrity not pass. System ended.")
