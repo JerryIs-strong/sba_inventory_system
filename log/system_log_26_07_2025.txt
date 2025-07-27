@@ -1,7 +1,0 @@
-
-2025-07-26 17:02:00.912391 [View Inventory]: get inventory
-2025-07-26 17:02:01.813491 [View Inventory]: get inventory
-2025-07-26 17:02:17.651444 [Inventory Management]: Added item father with quantity 0
-2025-07-26 17:02:24.060275 [Inventory Management]: Added item Mother with quantity 0
-2025-07-26 17:02:25.646448 [View Inventory]: get inventory
-2025-07-26 17:02:52.213264 [Export Inventory]: Inventory exported
