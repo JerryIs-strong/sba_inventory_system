@@ -15,8 +15,10 @@ def loadDB():
     with open('./data/inventoryDB.json', 'r') as file:
         inventory = json.load(file)
 
-def menu():
-    command = [[1,"Inventory Management: add or remove item(s) inside this system\n- type item_name:quantity for adding item and quantity\n- use ' ' to split for batch update"],[2,"View Inventory: Check the inventory quantity of each item"],[3,"Update Inventory: Update the inventory quantity of a specific item"],[4,"Search: Searching a specific item from inventory"],[5, "Export: Export data as .csv"],[6,"Log Out: Log out current account"]]
+def menu(admin):
+    command = [[1,"Inventory Management: add or remove item(s) inside this system\n- type item_name:quantity for adding item and quantity\n- use ' ' to split for batch update"],[2,"View Inventory: Check the inventory quantity of each item"],[3,"Update Inventory: Update the inventory quantity of a specific item"],[4,"Search: Searching a specific item from inventory"],[5, "Export: Export data as .csv"],[6,"Log Out: Log out current account"],[7,"Admin Menu: Control panel for admin"]]
+    if(not admin):
+        command.pop()
     print(tabulate(command, headers=["Code","Describe"], tablefmt="simple_grid"))
 
 def getItems(detail = False):
@@ -123,10 +125,53 @@ def quitNow():
             itg.writeMD5()
         case "n":
             return
+        
+
+def adminMenu():
+    command = [[1,"User Management: add or remove user(s)"], [2, "View User: List out all user"],[3, "Exit Control Panel: Quit this Admin Control Panel"]]
+    print(tabulate(command, headers=["Code","Describe"], tablefmt="simple_grid"))
+    while True:
+        aka = int(input("Choose an action(ACP): "))
+        match aka:
+            case 1:
+                print("\n[1] Create user")
+                print("[2] Remove user")
+                action = int(input("Choose an action: "))
+                if action == 1:
+                    user_name = input("User Name: ")
+                    user_password = getpass.getpass('User Password:')
+                    user_group = input("User group [1]Admin [2]User (With great power comes great responsibility): ")
+                    if um().createUser(user_name, user_password, user_group) == "OK":
+                        print(f"[Info]: Successful add user {user_name}")
+                    else:
+                        print(um().createUser(user_name, user_password, user_group))
+                elif action == 2:
+                    index = 0
+                    user_list = []
+                    for user in um().getUserList():
+                        user_list.append([index, user])
+                        index += 1
+                    print(tabulate(user_list, headers=["Code", "User Name"], tablefmt="simple_grid"))
+                    user_code = int(input("Which user you want to delete: "))
+                    print(f'Type(Confirm to delete "{user_list[user_code][1]}") to delete this account')
+                    confirm = input("Type confirm passkey here: ")
+                    if confirm == f'Confirm to delete "{user_list[user_code][1]}"':
+                        um().deleteUser(user_list[user_code][1])
+                        print(f"[Info]: Successful delete user {user_list[user_code][1]}")
+            case 2:
+                user_list = []
+                for user in um().getUserList():
+                    user_list.append([user])
+                print(tabulate(user_list, headers=["User Name"], tablefmt="psql"))
+            case 3:
+                break
+            case _:
+                print("Invalid action.")
+
 
 def main(admin):
     loadDB()
-    menu()
+    menu(admin)
     while True:
         action = int(input("Choose an action: "))
         match action:

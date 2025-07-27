@@ -39,6 +39,7 @@ class UserManager:
         try:
             cur.execute('INSERT INTO users (user_name, user_password, user_group) VALUES (?, ?, ?)', (user_name, self.hash_password(password), user_group))
             con.commit()
+            return "OK"
         except sqlite3.InterfaceError:
             return "Error: Username already exists."
         finally:
@@ -59,7 +60,6 @@ class UserManager:
         cur.execute('DELETE FROM users WHERE user_name = ?', (user_name,))
         con.commit()
         con.close()
-        return "User updated successfully."
     
     def verifyUser(self, user_name, user_password):
         con = sqlite3.connect("data/user.db")
