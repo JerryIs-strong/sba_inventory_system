@@ -1,7 +1,7 @@
 # sba_inventory_system
 
-Sample account:
-[Admin] \
+Sample account: \
+[Admin] 
 - USERNAME: Admin
 - PASSWORD: supersecurepassword
 

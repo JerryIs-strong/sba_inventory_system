@@ -219,12 +219,14 @@ if __name__ == '__main__':
                                     main(True)
                                 else:
                                     print(f"Welcome {user_name}")
+                                    itg.log(f'[{current_user_name}] [User Management] User {user_name} success to log-in system')
                                     main(False)
                             else:
                                 print("[Error]: Database integrity not pass. System ended.")
                             break
                         else:
                             print(f"[Error]: Password incorrect")
+                            itg.log(f'[{current_user_name}] [User Management] User {user_name} fail to log-in system')
                     else:
                         print("[Error]: User not exit")
             case 2:
