@@ -6,9 +6,11 @@ from datetime import datetime
 import os
 from module.userManagement import UserManager as um
 import getpass
+import pytz
 
 inventory = {}
 current_user_name = ''
+timezone = pytz.timezone('Asia/Hong_Kong')
 
 def loadDB():
     global inventory
@@ -108,7 +110,7 @@ def search():
 
 def export():
     df = pd.DataFrame(list(inventory.items()), columns=['Item_name', 'Quantity'])
-    current_date = datetime.now().strftime("%d_%m_%Y")
+    current_date = datetime.now(timezone).strftime("%d_%m_%Y")
     file_name = f'exported_data_{current_date}.csv'
     file_path = os.path.join('exports', file_name)
     df.to_csv(file_path, index=False)

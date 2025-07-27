@@ -1,6 +1,9 @@
 import hashlib
 import json
 import datetime
+import pytz
+
+timezone = pytz.timezone('Asia/Hong_Kong')
 
 def writeMD5():
     db_hash = hashlib.md5(open('data/inventoryDB.json', 'rb').read()).hexdigest()
@@ -24,6 +27,6 @@ def verifyMD5():
         return False
 
 def log(message):
-    current_date = datetime.datetime.now().strftime("%d_%m_%Y")
+    current_date = datetime.datetime.now(timezone).strftime("%d_%m_%Y")
     with open(f"log/system_log_{current_date}.txt", "a") as f:
-        f.write(f'{datetime.datetime.now()} {message}\n')
+        f.write(f'{datetime.datetime.now(timezone)} {message}\n')
