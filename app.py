@@ -4,9 +4,11 @@ import module.integrity as itg
 import pandas as pd
 from datetime import datetime
 import os
-import module.userManagement as um
+from module.userManagement import UserManager as um
+import getpass
 
 inventory = {}
+current_user_name = ''
 
 def loadDB():
     global inventory
@@ -14,7 +16,7 @@ def loadDB():
         inventory = json.load(file)
 
 def menu():
-    command = [[1,"Inventory Management: add or remove item(s) inside this system\n- type item_name:quantity for adding item and quantity\n- use ' ' to split for batch update"],[2,"View Inventory: Check the inventory quantity of each item"],[3,"Update Inventory: Update the inventory quantity of a specific item"],[4,"Search: Searching a specific item from inventory"],[5, "Export: Export data as .csv"],[6,"Exit: Quit this systeme"]]
+    command = [[1,"Inventory Management: add or remove item(s) inside this system\n- type item_name:quantity for adding item and quantity\n- use ' ' to split for batch update"],[2,"View Inventory: Check the inventory quantity of each item"],[3,"Update Inventory: Update the inventory quantity of a specific item"],[4,"Search: Searching a specific item from inventory"],[5, "Export: Export data as .csv"],[6,"Log Out: Log out current account"]]
     print(tabulate(command, headers=["Code","Describe"], tablefmt="simple_grid"))
 
 def getItems(detail = False):
@@ -43,14 +45,14 @@ def management():
                     item_name, quantity = items[i].split(':')
                     inventory[item_name] = quantity
                     print(f'[Info] Added item {item_name} with quantity {quantity}.')
-                    um.log(f"[Inventory Management]: Added item {item_name} with quantity {quantity}")
+                    itg.log(f"[{current_user_name}] [Inventory Management]: Added item {item_name} with quantity {quantity}")
             else:
                 if items[i] in inventory:
                     print("[Info] Item already exit.")
                 else:
                     inventory[items[i]] = 0
                     print(f'[Info] Added item {items[i]} with quantity 0')
-                    um.log(f"[Inventory Management]: Added item {items[i]} with quantity 0")
+                    itg.log(f"[{current_user_name}] [Inventory Management]: Added item {items[i]} with quantity 0")
 
     elif action == 2:
         total_inventory = getItems(False)
@@ -63,13 +65,13 @@ def management():
                     item_name = total_inventory[int(item_codes[i])][1]
                     del inventory[item_name]
                     print(f"[Info] {item_name} have been removed.")
-                    um.log(f"[Inventory Management]: {item_name} have been removed")
+                    itg.log(f"[{current_user_name}] [Inventory Management]: {item_name} have been removed")
         except IndexError:
             print("[Error] Value out of range.")
 
 def view():
     print(tabulate(getItems(True), headers=["Item", "Quantity"], tablefmt="psql"))
-    um.log(f"[View Inventory]: get inventory")
+    itg.log(f"[{current_user_name}] [View Inventory]: get inventory")
 
 def update():
     total_inventory = getItems(False)
@@ -83,12 +85,12 @@ def update():
                 new_name = input("Updated item name: ")
                 inventory[new_name] = inventory.pop(item_name)
                 print(f"[Info] Updated the name of {item_name} to {new_name}.")
-                um.log(f"[Update Inventory]: Updated the name of {item_name} to {new_name}")
+                itg.log(f"[{current_user_name}] [Update Inventory]: Updated the name of {item_name} to {new_name}")
             case 1:
                 new_quantity = int(input("Updated quantity: "))
                 inventory[item_name] = new_quantity
                 print(f"[Info] Updated the quantity of {item_name} to {new_quantity}.")
-                um.log(f"[Update Inventory]: Updated the quantity of {item_name} to {new_quantity}")
+                itg.log(f"[{current_user_name}] [Update Inventory]: Updated the quantity of {item_name} to {new_quantity}")
             case _:
                 print("[Error] Invalid option.")
     except IndexError:
@@ -108,7 +110,7 @@ def export():
     file_name = f'exported_data_{current_date}.csv'
     file_path = os.path.join('exports', file_name)
     df.to_csv(file_path, index=False)
-    um.log(f"[Export Inventory]: Inventory exported")
+    itg.log(f"[{current_user_name}] [Export Inventory]: Inventory exported")
 
 def quitNow():
     aka = input("Would you like to save the change Yes[Y] No[N]: ")
@@ -117,12 +119,12 @@ def quitNow():
             with open('./data/inventoryDB.json', 'w') as file:
                 json.dump(inventory, file)
             print("[Info]: Update database successfully.")
-            um.log(f"[Update Inventory]: Inventory updated")
+            itg.log(f"[{current_user_name}] [Update Inventory]: Inventory updated")
             itg.writeMD5()
         case "n":
             return
 
-def main():
+def main(admin):
     loadDB()
     menu()
     while True:
@@ -141,11 +143,41 @@ def main():
             case 6:
                 quitNow()
                 break
+            case 7:
+                if admin:
+                    adminMenu()
+                else:
+                    print("Invalid action.")
             case _:
                 print("Invalid action.")
 
 if __name__ == '__main__':
-    if itg.verifyMD5():
-        main()
-    else:
-        print("[Error]: Database integrity not pass. System ended.")
+    while True:
+        command = [[1,"Log In: Log in to this system"], [2,"Exist: Quit this system"]]
+        print(tabulate(command, headers=["Code","Describe"], tablefmt="simple_grid"))
+        aka = int(input("Choose an action: "))
+        match aka:
+            case 1:
+                while True:
+                    user_name = input("\nUSER NAME: ")
+                    if user_name in um().getUserList():
+                        user_password = getpass.getpass('PASSWORD:')
+                        if um().verifyUser(user_name, user_password):
+                            if itg.verifyMD5():
+                                if um().getUserGroup(user_name) == "Admin":
+                                    print(f"\nWelcome {user_name}[{um().getUserGroup(user_name)}]")
+                                    main(True)
+                                else:
+                                    print(f"Welcome {user_name}")
+                                    main(False)
+                            else:
+                                print("[Error]: Database integrity not pass. System ended.")
+                            break
+                        else:
+                            print(f"[Error]: Password incorrect")
+                    else:
+                        print("[Error]: User not exit")
+            case 2:
+                break
+            case _:
+                print("Invalid action.")
