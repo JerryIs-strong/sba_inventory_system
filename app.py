@@ -71,7 +71,7 @@ def management():
 
 def view():
     print(tabulate(getItems(True), headers=["Item", "Quantity"], tablefmt="psql"))
-    itg.log(f"[{current_user_name}] [View Inventory]: get inventory")
+    itg.log(f"[{current_user_name}] [View Inventory]: Get inventory")
 
 def update():
     total_inventory = getItems(False)
@@ -161,6 +161,7 @@ if __name__ == '__main__':
                 while True:
                     user_name = input("\nUSER NAME: ")
                     if user_name in um().getUserList():
+                        current_user_name = user_name
                         user_password = getpass.getpass('PASSWORD:')
                         if um().verifyUser(user_name, user_password):
                             if itg.verifyMD5():
