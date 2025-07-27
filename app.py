@@ -140,7 +140,11 @@ def adminMenu():
                 if action == 1:
                     user_name = input("User Name: ")
                     user_password = getpass.getpass('User Password:')
-                    user_group = input("User group [1]Admin [2]User (With great power comes great responsibility): ")
+                    user_group = int(input("User group [1]Admin [2]User (With great power comes great responsibility): "))
+                    if user_group == 1:
+                        user_group = "Admin"
+                    elif user_group == 2:
+                        user_group = "User"
                     if um().createUser(user_name, user_password, user_group) == "OK":
                         print(f"[Info]: Successful add user {user_name}")
                     else:
