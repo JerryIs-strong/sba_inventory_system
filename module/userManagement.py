@@ -76,3 +76,25 @@ class UserManager:
             return True
         else:
             return False
+
+    def updateUser(self, type, old_user_info, new_user_info, addition_user_info = None):
+        try:
+            con = sqlite3.connect("data/user.db")
+            cur = con.cursor()
+            
+            if type == "user_name":
+                cur.execute('UPDATE users SET user_name = ? WHERE user_name = ?', (new_user_info, old_user_info))
+            elif type == "user_password":
+                cur.execute('UPDATE users SET user_password = ? WHERE user_name = ? AND user_password = ?', (self.hash_password(new_user_info), old_user_info, addition_user_info))
+            else:
+                return "[Error]: Invalid type value"
+            
+            con.commit()
+            return "[Info]: Successful update user name/password"
+        
+        except sqlite3.Error as e:
+            return f"[Error]: Database error - {str(e)}"
+        
+        finally:
+            con.close()
+
