@@ -4,21 +4,32 @@ import module.integrity as itg
 import pandas as pd
 from datetime import datetime
 import os
-from module.userManagement import UserManager as um
+from module.userManagement import UserManager
 import getpass
 import pytz
+from colorama import Fore, Style, init
 
 inventory = {}
 current_user_name = ''
 timezone = pytz.timezone('Asia/Hong_Kong')
+um = UserManager()
+init()
 
 def loadDB():
     global inventory
     with open('./data/inventoryDB.json', 'r') as file:
         inventory = json.load(file)
 
+def echoMessage(action, message):
+    if action == 'error':
+        print(f"{Fore.RED}[ERROR]{Style.RESET_ALL} {message}")
+    elif action == 'info':
+        print(f"{Fore.CYAN}[INFO]{Style.RESET_ALL} {message}")
+    elif action == 'success':
+        print(f"{Fore.GREEN}[SUCCESS]{Style.RESET_ALL} {message}")
+
 def menu(admin):
-    command = [[1,"Inventory Management: add or remove item(s) inside this system\n- type item_name:quantity for adding item and quantity\n- use ' ' to split for batch update"],[2,"View Inventory: Check the inventory quantity of each item"],[3,"Update Inventory: Update the inventory quantity of a specific item"],[4,"Search: Searching a specific item from inventory"],[5, "Export: Export data as .csv"],[6,"Log Out: Log out current account"],[7,"Admin Menu: Control panel for admin"]]
+    command = [[0, "Help: Print out this menu again"], [1,"Inventory Management: add or remove item(s) inside this system\n- type item_name:quantity for adding item and quantity\n- use ' ' to split for batch update"],[2,"View Inventory: Check the inventory quantity of each item"],[3,"Update Inventory: Update the inventory quantity of a specific item"],[4,"Search: Searching a specific item from inventory"],[5, "Export: Export data as .csv"],[6,"Log Out: Log out current account"],[7,"Admin Menu: Control panel for admin"]]
     if(not admin):
         command.pop()
     print(tabulate(command, headers=["Code","Describe"], tablefmt="simple_grid"))
@@ -44,19 +55,19 @@ def management():
         for i in range(len(items)):
             if ':' in items[i]:
                 if items[i] in inventory:
-                    print("[Info] Item already exit.")
+                    echoMessage('error', "Item already exit")
                 else:
                     item_name, quantity = items[i].split(':')
                     inventory[item_name] = quantity
-                    print(f'[Info] Added item {item_name} with quantity {quantity}.')
-                    itg.log(f"[{current_user_name}] [Inventory Management]: Added item {item_name} with quantity {quantity}")
+                    echoMessage('info', f"Added item {item_name} with quantity {quantity}")
+                    itg.log(f"[{current_user_name}] Added item {item_name} with quantity {quantity}")
             else:
                 if items[i] in inventory:
-                    print("[Info] Item already exit.")
+                    echoMessage('error', f"Item already exit")
                 else:
                     inventory[items[i]] = 0
-                    print(f'[Info] Added item {items[i]} with quantity 0')
-                    itg.log(f"[{current_user_name}] [Inventory Management]: Added item {items[i]} with quantity 0")
+                    echoMessage('info', f"Added item {items[i]} with quantity 0")
+                    itg.log(f"[{current_user_name}] Added item {items[i]} with quantity 0")
 
     elif action == 2:
         total_inventory = getItems(False)
@@ -68,14 +79,14 @@ def management():
                 for i in range(len(item_codes)):
                     item_name = total_inventory[int(item_codes[i])][1]
                     del inventory[item_name]
-                    print(f"[Info] {item_name} have been removed.")
-                    itg.log(f"[{current_user_name}] [Inventory Management]: {item_name} have been removed")
+                    echoMessage('info', f"{item_name} have been removed")
+                    itg.log(f"[{current_user_name}] {item_name} have been removed")
         except IndexError:
-            print("[Error] Value out of range.")
+            echoMessage('error', "Value out of range")
 
 def view():
     print(tabulate(getItems(True), headers=["Item", "Quantity"], tablefmt="psql"))
-    itg.log(f"[{current_user_name}] [View Inventory]: Get inventory")
+    itg.log(f"[{current_user_name}] Get inventory")
 
 def update():
     total_inventory = getItems(False)
@@ -88,17 +99,17 @@ def update():
             case 0:
                 new_name = input("Updated item name: ")
                 inventory[new_name] = inventory.pop(item_name)
-                print(f"[Info] Updated the name of {item_name} to {new_name}.")
-                itg.log(f"[{current_user_name}] [Update Inventory]: Updated the name of {item_name} to {new_name}")
+                echoMessage('info', f"Updated the name of {item_name} to {new_name}")
+                itg.log(f"[{current_user_name}] Updated the name of {item_name} to {new_name}")
             case 1:
                 new_quantity = int(input("Updated quantity: "))
                 inventory[item_name] = new_quantity
-                print(f"[Info] Updated the quantity of {item_name} to {new_quantity}.")
-                itg.log(f"[{current_user_name}] [Update Inventory]: Updated the quantity of {item_name} to {new_quantity}")
+                echoMessage('info', f"Item already exit")
+                itg.log(f"[{current_user_name}] Updated the quantity of {item_name} to {new_quantity}")
             case _:
-                print("[Error] Invalid option.")
+                echoMessage('error', "Invalid option")
     except IndexError:
-        print("[Error] Value out of range.")
+        echoMessage('error', "Value out of range")
 
 def search():
     total_inventory = getItems(True)
@@ -106,7 +117,7 @@ def search():
     for i in range(len(total_inventory)):
         if aka in total_inventory[i][0]:
             return tabulate([total_inventory[i]], headers=["Item", "Quantity"], tablefmt="psql")
-    return "Not found."
+    return "Not found"
 
 def export():
     df = pd.DataFrame(list(inventory.items()), columns=['Item_name', 'Quantity'])
@@ -114,7 +125,7 @@ def export():
     file_name = f'exported_data_{current_date}.csv'
     file_path = os.path.join('exports', file_name)
     df.to_csv(file_path, index=False)
-    itg.log(f"[{current_user_name}] [Export Inventory]: Inventory exported")
+    itg.log(f"[{current_user_name}] Inventory exported")
 
 def quitNow():
     aka = input("Would you like to save the change Yes[Y] No[N]: ")
@@ -122,12 +133,33 @@ def quitNow():
         case "y":
             with open('./data/inventoryDB.json', 'w') as file:
                 json.dump(inventory, file)
-            print("[Info]: Update database successfully.")
-            itg.log(f"[{current_user_name}] [Update Inventory]: Inventory updated")
+            echoMessage('success', "Update database successfully")
+            itg.log(f"[{current_user_name}] Inventory updated")
             itg.writeMD5()
         case "n":
             return
-        
+
+def addUser(group = "User"):
+    print("\nPlease follow this role to setup your password:")
+    print("- MUST include at least ONE Number & Uppercase Letter & Lowercase Letter & Symbol\n- Should between 8 - 32 latter")
+    while True:
+        user_name = input("[1/3]: Type your user name: ")
+        while True:
+                user_password = getpass.getpass("[2/3]: Type your password: ")
+                if(um.passwordVerify(user_password) == "OK"):
+                    user_password_confirm = getpass.getpass("[3/3]: Type your password again to confirm: ")
+                    if user_password == user_password_confirm:
+                        create = um.createUser(user_name, user_password, group)
+                        if create == 'OK':
+                            echoMessage('success', f'Successful to create user "{user_name}"\n')
+                            return
+                        else:
+                            echoMessage('error', "Username already exists")
+                            break
+                    else:
+                        echoMessage('error', "The two inputs do not match")
+                else:
+                    echoMessage('error', "Try to set up a secure password")
 
 def adminMenu():
     command = [[1,"User Management: add or remove user(s)"], [2, "View User: List out all user"],[3, "Exit Control Panel: Quit this Admin Control Panel"]]
@@ -140,40 +172,36 @@ def adminMenu():
                 print("[2] Remove user")
                 action = int(input("Choose an action: "))
                 if action == 1:
-                    user_name = input("User Name: ")
-                    user_password = getpass.getpass('User Password:')
                     user_group = int(input("User group [1]Admin [2]User (With great power comes great responsibility): "))
                     if user_group == 1:
-                        user_group = "Admin"
+                        addUser("Admin")
                     elif user_group == 2:
-                        user_group = "User"
-                    if um().createUser(user_name, user_password, user_group) == "OK":
-                        print(f"[Info]: Successful add user {user_name}")
-                    else:
-                        print(um().createUser(user_name, user_password, user_group))
+                        addUser()
                 elif action == 2:
-                    index = 0
-                    user_list = []
-                    for user in um().getUserList():
-                        user_list.append([index, user])
-                        index += 1
-                    print(tabulate(user_list, headers=["Code", "User Name"], tablefmt="simple_grid"))
-                    user_code = int(input("Which user you want to delete: "))
-                    print(f'Type(Confirm to delete "{user_list[user_code][1]}") to delete this account')
-                    confirm = input("Type confirm passkey here: ")
-                    if confirm == f'Confirm to delete "{user_list[user_code][1]}"':
-                        um().deleteUser(user_list[user_code][1])
-                        print(f"[Info]: Successful delete user {user_list[user_code][1]}")
+                    try:
+                        index = 0
+                        user_list = []
+                        for user in um.getUserList():
+                            user_list.append([index, user])
+                            index += 1
+                        print(tabulate(user_list, headers=["Code", "User Name"], tablefmt="simple_grid"))
+                        user_code = int(input("Which user you want to delete: "))
+                        print(f'Type(Confirm to delete "{user_list[user_code][1]}") to delete this account')
+                        confirm = input("Type confirm passkey here: ")
+                        if confirm == f'Confirm to delete "{user_list[user_code][1]}"':
+                            um.deleteUser(user_list[user_code][1])
+                            echoMessage('success', f"Successful delete user {user_list[user_code][1]}")  
+                    except IndexError:
+                        echoMessage('error', "Value out of range")
             case 2:
                 user_list = []
-                for user in um().getUserList():
+                for user in um.getUserList():
                     user_list.append([user])
                 print(tabulate(user_list, headers=["User Name"], tablefmt="psql"))
             case 3:
                 break
             case _:
-                print("Invalid action.")
-
+                print("Invalid action")
 
 def main(admin):
     loadDB()
@@ -181,6 +209,8 @@ def main(admin):
     while True:
         action = int(input("Choose an action: "))
         match action:
+            case 0:
+                menu()
             case 1:
                 management()
             case 2:
@@ -198,40 +228,42 @@ def main(admin):
                 if admin:
                     adminMenu()
                 else:
-                    print("Invalid action.")
+                    print("Invalid action")
             case _:
-                print("Invalid action.")
+                print("Invalid action")
 
 if __name__ == '__main__':
     while True:
-        command = [[1,"Log In: Log in to this system"], [2,"Exist: Quit this system"]]
+        command = [[1,"Sign In: Log in to this system"],[2, "Sign Up: Create a new user account"] , [3,"Exist: Quit this system"]]
         print(tabulate(command, headers=["Code","Describe"], tablefmt="simple_grid"))
         aka = int(input("Choose an action: "))
         match aka:
             case 1:
                 while True:
                     user_name = input("\nUSER NAME: ")
-                    if user_name in um().getUserList():
+                    if user_name in um.getUserList():
                         current_user_name = user_name
                         user_password = getpass.getpass('PASSWORD:')
-                        if um().verifyUser(user_name, user_password):
+                        if um.verifyUser(user_name, user_password):
                             if itg.verifyMD5():
-                                if um().getUserGroup(user_name) == "Admin":
-                                    print(f"\nWelcome {user_name}[{um().getUserGroup(user_name)}]")
+                                if um.getUserGroup(user_name) == "Admin":
+                                    echoMessage('success', f"Welcome {user_name}[{um.getUserGroup(user_name)}]")
                                     main(True)
                                 else:
-                                    print(f"Welcome {user_name}")
-                                    itg.log(f'[{current_user_name}] [User Management] User {user_name} success to log-in system')
+                                    echoMessage('success', f"Welcome {user_name}")
+                                    itg.log(f'[{current_user_name}] User "{user_name}" success to sign-in system')
                                     main(False)
                             else:
-                                print("[Error]: Database integrity not pass. System ended.")
+                                echoMessage('error', "Database integrity not pass. System ended")
                             break
                         else:
-                            print(f"[Error]: Password incorrect")
-                            itg.log(f'[{current_user_name}] [User Management] User {user_name} fail to log-in system')
+                            echoMessage('error', "Password incorrect")
+                            itg.log(f'[{current_user_name}] User "{user_name}" fail to sign-in system')
                     else:
-                        print("[Error]: User not exit")
+                        echoMessage('error', "User not exit")
             case 2:
+                addUser()
+            case 3:
                 break
             case _:
-                print("Invalid action.")
+                print("Invalid action")

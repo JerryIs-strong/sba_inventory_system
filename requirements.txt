@@ -2,3 +2,4 @@ pytz
 pandas
 tabulate
 bcrypt
+colorama
