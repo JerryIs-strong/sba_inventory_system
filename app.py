@@ -15,6 +15,8 @@ import os
 ### - Combine Update Inventory --> Inventory Management
 ### - Add setting option for user
 ### - optimize user experience
+### - add set password & user name option
+### - update log logic(temp & modified)
 
 inventory = {}
 current_user_name = ''
