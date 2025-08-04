@@ -1,2 +1,17 @@
 2025-08-04 00:14:56.049491+08:00 [i-show-speed] User "i-show-speed" fail to sign-in system
 2025-08-04 00:15:09.725501+08:00 [i-show-speed] User "i-show-speed" success to sign-in system
+2025-08-04 18:59:41.490447+08:00 [Admin] User "Admin" fail to sign-in system
+2025-08-04 19:00:01.275195+08:00 [Admin] HER have been removed
+2025-08-04 19:06:42.245972+08:00 [i-show-speed] Get inventory
+2025-08-04 19:12:22.004338+08:00 [i-show-speed] Get inventory
+2025-08-04 19:18:12.180481+08:00 [i-show-speed] We_are have been removed
+2025-08-04 19:29:20.468832+08:00 [i-show-speed] Get inventory
+2025-08-04 19:31:41.683992+08:00 [i-show-speed] Get inventory
+2025-08-04 19:32:10.535587+08:00 [i-show-speed] Get inventory
+2025-08-04 19:32:12.187043+08:00 [i-show-speed] Get inventory
+2025-08-04 19:33:22.524595+08:00 [i-show-speed] Get inventory
+2025-08-04 19:34:29.247026+08:00 [i-show-speed] Inventory exported
+2025-08-04 19:38:13.429029+08:00 [i-show-speed] Inventory exported
+2025-08-04 19:38:24.164840+08:00 [i-show-speed] Inventory exported
+2025-08-04 19:56:20.759130+08:00 [i-show-speed] User "i-show-speed" fail to sign-in system
+2025-08-04 20:01:55.380427+08:00 [i-show-speed] User "i-show-speed" fail to sign-in system

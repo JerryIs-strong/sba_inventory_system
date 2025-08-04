@@ -7,18 +7,30 @@ import os
 from module.userManagement import UserManager
 import getpass
 import pytz
-from colorama import Fore, Style, init
+from colorama import Fore, Style, Back, init
+import os
+
+
+### TODO: 
+### - Combine Update Inventory --> Inventory Management
+### - Add setting option for user
+### - optimize user experience
 
 inventory = {}
 current_user_name = ''
 timezone = pytz.timezone('Asia/Hong_Kong')
 um = UserManager()
-init()
+init(autoreset=True)
+admin = False
+firstLogIn = True
 
 def loadDB():
     global inventory
     with open('./data/inventoryDB.json', 'r') as file:
         inventory = json.load(file)
+
+def cls():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 def echoMessage(action, message):
     if action == 'error':
@@ -28,7 +40,8 @@ def echoMessage(action, message):
     elif action == 'success':
         print(f"{Fore.GREEN}[SUCCESS]{Style.RESET_ALL} {message}")
 
-def menu(admin):
+def menu():
+    global admin
     command = [[0, "Help: Print out this menu again"], [1,"Inventory Management: add or remove item(s) inside this system\n- type item_name:quantity for adding item and quantity\n- use ' ' to split for batch update"],[2,"View Inventory: Check the inventory quantity of each item"],[3,"Update Inventory: Update the inventory quantity of a specific item"],[4,"Search: Searching a specific item from inventory"],[5, "Export: Export data as .csv"],[6,"Log Out: Log out current account"],[7,"Admin Menu: Control panel for admin"]]
     if(not admin):
         command.pop()
@@ -46,88 +59,140 @@ def getItems(detail = False):
     return result
 
 def management():
+    cls()
+    print(f"{Back.GREEN}PAGE / INVENTORY MANAGEMENT\n")
     print("[1] Add item")
     print("[2] Remove item")
-    action = int(input("Choose an action: "))
-    if action == 1:
-        item = input("Which item do you want to add: ")
-        items = item.split()
-        for i in range(len(items)):
-            if ':' in items[i]:
-                if items[i] in inventory:
-                    echoMessage('error', "Item already exit")
-                else:
-                    item_name, quantity = items[i].split(':')
-                    inventory[item_name] = quantity
-                    echoMessage('info', f"Added item {item_name} with quantity {quantity}")
-                    itg.log(f"[{current_user_name}] Added item {item_name} with quantity {quantity}")
-            else:
-                if items[i] in inventory:
-                    echoMessage('error', f"Item already exit")
-                else:
-                    inventory[items[i]] = 0
-                    echoMessage('info', f"Added item {items[i]} with quantity 0")
-                    itg.log(f"[{current_user_name}] Added item {items[i]} with quantity 0")
-
-    elif action == 2:
-        total_inventory = getItems(False)
-        print(tabulate(total_inventory, headers=["Code", "Item name"], tablefmt="simple_grid"))
-        try:
-            item_code = input("Which item do you want to remove: ")
-            item_codes = item_code.split()
-            if len(item_codes) > 0:
-                for i in range(len(item_codes)):
-                    item_name = total_inventory[int(item_codes[i])][1]
-                    del inventory[item_name]
-                    echoMessage('info', f"{item_name} have been removed")
-                    itg.log(f"[{current_user_name}] {item_name} have been removed")
-        except IndexError:
-            echoMessage('error', "Value out of range")
-
-def view():
-    print(tabulate(getItems(True), headers=["Item", "Quantity"], tablefmt="psql"))
-    itg.log(f"[{current_user_name}] Get inventory")
-
-def update():
-    total_inventory = getItems(False)
-    print(tabulate(total_inventory, headers=["Code", "Item name"], tablefmt="simple_grid"))  
-    try:
-        item_code = int(input("Which item do you want to update: "))
-        item_name = total_inventory[item_code][1]
-        type = int(input("Which info you want to update [0]Item name [1]Quantity: "))
-        match type:
-            case 0:
-                new_name = input("Updated item name: ")
-                inventory[new_name] = inventory.pop(item_name)
-                echoMessage('info', f"Updated the name of {item_name} to {new_name}")
-                itg.log(f"[{current_user_name}] Updated the name of {item_name} to {new_name}")
+    print("[3] Exit this page")
+    while True:
+        action = int(input("\nChoose an action: "))
+        match action:
             case 1:
-                new_quantity = int(input("Updated quantity: "))
-                inventory[item_name] = new_quantity
-                echoMessage('info', f"Item already exit")
-                itg.log(f"[{current_user_name}] Updated the quantity of {item_name} to {new_quantity}")
+                item = input("Which item do you want to add: ")
+                items = item.split()
+                for i in range(len(items)):
+                    if ':' in items[i]:
+                        if items[i] in inventory:
+                            echoMessage('error', "Item already exit")
+                        else:
+                            item_name, quantity = items[i].split(':')
+                            inventory[item_name] = quantity
+                            echoMessage('info', f"Added item {item_name} with quantity {quantity}")
+                            itg.log(f"[{current_user_name}] Added item {item_name} with quantity {quantity}")
+                    else:
+                        if items[i] in inventory:
+                            echoMessage('error', f"Item already exit")
+                        else:
+                            inventory[items[i]] = 0
+                            echoMessage('info', f"Added item {items[i]} with quantity 0")
+                            itg.log(f"[{current_user_name}] Added item {items[i]} with quantity 0")
+            case 2:
+                total_inventory = getItems(False)
+                print(tabulate(total_inventory, headers=["Code", "Item name"], tablefmt="simple_grid"))
+                try:
+                    item_code = input("Which item do you want to remove: ")
+                    item_codes = item_code.split()
+                    if len(item_codes) > 0:
+                        for i in range(len(item_codes)):
+                            item_name = total_inventory[int(item_codes[i])][1]
+                            del inventory[item_name]
+                            echoMessage('info', f"{item_name} have been removed")
+                            itg.log(f"[{current_user_name}] {item_name} have been removed")
+                except IndexError:
+                    echoMessage('error', "Value out of range")
+            case 3:
+                break
             case _:
                 echoMessage('error', "Invalid option")
-    except IndexError:
-        echoMessage('error', "Value out of range")
+
+def view():
+    cls()
+    print(f"{Back.GREEN}PAGE / VIEW INVENTORY\n")
+    print(tabulate(getItems(True), headers=["Item", "Quantity"], tablefmt="psql"))
+    itg.log(f"[{current_user_name}] Get inventory")
+    while True:
+        action = input("\nPress Enter to exit")
+        match action:
+            case "":
+                break
+            case _:
+                echoMessage('error', "Invalid option")
+
+def update():
+    cls()
+    print(f"{Back.GREEN}PAGE / UPDATE INVENTORY\n")
+    total_inventory = getItems(False)
+    print(tabulate(total_inventory, headers=["Code", "Item name"], tablefmt="simple_grid"))  
+    print("\n[1] Update inventory")
+    print("[2] Exit this page")
+    while True:
+        action = int(input("\nChoose an action: "))
+        match action:
+            case 1:
+                try:
+                    item_code = int(input("Which item do you want to update: "))
+                    item_name = total_inventory[item_code][1]
+                    type = int(input("Which info you want to update [0]Item name [1]Quantity: "))
+                    match type:
+                        case 0:
+                            new_name = input("Updated item name: ")
+                            inventory[new_name] = inventory.pop(item_name)
+                            echoMessage('info', f"Updated the name of {item_name} to {new_name}")
+                            itg.log(f"[{current_user_name}] Updated the name of {item_name} to {new_name}")
+                        case 1:
+                            new_quantity = int(input("Updated quantity: "))
+                            inventory[item_name] = new_quantity
+                            echoMessage('info', f"Item already exit")
+                            itg.log(f"[{current_user_name}] Updated the quantity of {item_name} to {new_quantity}")
+                        case _:
+                            echoMessage('error', "Invalid option")
+                except IndexError:
+                    echoMessage('error', "Value out of range")
+            case 2:
+                break
+            case _:
+                echoMessage('error', "Invalid option")
 
 def search():
+    cls()
+    print(f"{Back.GREEN}PAGE / SEARCH ITEM")
     total_inventory = getItems(True)
-    aka = input("Which item you want to search: ")
-    for i in range(len(total_inventory)):
-        if aka in total_inventory[i][0]:
-            return tabulate([total_inventory[i]], headers=["Item", "Quantity"], tablefmt="psql")
-    return "Not found"
+    found = False
+    while True:
+        action = input("\nType name of the product (or press enter to exit): ")
+        if action == "":
+            break
+        found = False
+        for item in total_inventory:
+            if action.lower() == item[0].lower():
+                print(tabulate([item], headers=["Item", "Quantity"], tablefmt="psql"))
+                found = True
+        if not found:
+            print("Not found")
 
 def export():
-    df = pd.DataFrame(list(inventory.items()), columns=['Item_name', 'Quantity'])
-    current_date = datetime.now(timezone).strftime("%d_%m_%Y")
-    file_name = f'exported_data_{current_date}.csv'
-    file_path = os.path.join('exports', file_name)
-    df.to_csv(file_path, index=False)
-    itg.log(f"[{current_user_name}] Inventory exported")
+    cls()
+    print(f"{Back.GREEN}PAGE / EXPORT DATA\n")
+    while True:
+        try:
+            df = pd.DataFrame(list(inventory.items()), columns=['Item_name', 'Quantity'])
+            current_date = datetime.now(timezone).strftime("%d_%m_%Y")
+            file_name = f'exported_data_{current_date}.csv'
+            file_path = os.path.join('exports', file_name)
+            df.to_csv(file_path, index=False)
+            echoMessage('success', f"Successfully to export data at {file_path}")
+            itg.log(f"[{current_user_name}] Inventory exported")
+        except Exception:
+            echoMessage('error', Exception)
+        action = input("\nPress Enter to exit")
+        match action:
+            case "":
+                break
+            case _:
+                echoMessage('error', "Invalid option")
 
 def quitNow():
+    cls()
     aka = input("Would you like to save the change Yes[Y] No[N]: ")
     match aka.lower():
         case "y":
@@ -140,6 +205,7 @@ def quitNow():
             return
 
 def addUser(group = "User"):
+    cls()
     print("\nPlease follow this role to setup your password:")
     print("- MUST include at least ONE Number & Uppercase Letter & Lowercase Letter & Symbol\n- Should between 8 - 32 latter")
     while True:
@@ -162,6 +228,7 @@ def addUser(group = "User"):
                     echoMessage('error', "Try to set up a secure password")
 
 def adminMenu():
+    cls()
     command = [[1,"User Management: add or remove user(s)"], [2, "View User: List out all user"],[3, "Exit Control Panel: Quit this Admin Control Panel"]]
     print(tabulate(command, headers=["Code","Describe"], tablefmt="simple_grid"))
     while True:
@@ -203,10 +270,15 @@ def adminMenu():
             case _:
                 print("Invalid action")
 
-def main(admin):
+def main():
     loadDB()
-    menu(admin)
+    global firstLogIn
     while True:
+        cls()
+        if firstLogIn: 
+            echoMessage('success', f"Welcome {current_user_name} [{um.getUserGroup(user_name)}]")
+            firstLogIn = False
+        menu()
         action = int(input("Choose an action: "))
         match action:
             case 0:
@@ -218,7 +290,7 @@ def main(admin):
             case 3:
                 update()
             case 4:
-                print(search())
+                search()
             case 5:
                 export()
             case 6:
@@ -234,6 +306,7 @@ def main(admin):
 
 if __name__ == '__main__':
     while True:
+        cls()
         command = [[1,"Sign In: Log in to this system"],[2, "Sign Up: Create a new user account"] , [3,"Exist: Quit this system"]]
         print(tabulate(command, headers=["Code","Describe"], tablefmt="simple_grid"))
         aka = int(input("Choose an action: "))
@@ -247,12 +320,8 @@ if __name__ == '__main__':
                         if um.verifyUser(user_name, user_password):
                             if itg.verifyMD5():
                                 if um.getUserGroup(user_name) == "Admin":
-                                    echoMessage('success', f"Welcome {user_name}[{um.getUserGroup(user_name)}]")
-                                    main(True)
-                                else:
-                                    echoMessage('success', f"Welcome {user_name}")
-                                    itg.log(f'[{current_user_name}] User "{user_name}" success to sign-in system')
-                                    main(False)
+                                    admin = True
+                                main()
                             else:
                                 echoMessage('error', "Database integrity not pass. System ended")
                             break
