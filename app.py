@@ -9,13 +9,14 @@ import getpass
 import pytz
 from colorama import Fore, Style, Back, init
 import os
+import time
 
 
 ### TODO: 
-### - Combine Update Inventory --> Inventory Management
-### - Add setting option for user
+### - [OK]Combine Update Inventory --> Inventory Management
+### - [OK]Add setting option for user
 ### - optimize user experience
-### - add set password & user name option
+### - [OK]add set password & user name option
 ### - update log logic(temp & modified)
 
 inventory = {}
@@ -25,6 +26,7 @@ um = UserManager()
 init(autoreset=True)
 admin = False
 firstLogIn = True
+log_out = False
 
 def loadDB():
     global inventory
@@ -44,7 +46,7 @@ def echoMessage(action, message):
 
 def menu():
     global admin
-    command = [[0, "Help: Print out this menu again"], [1,"Inventory Management: add or remove item(s) inside this system\n- type item_name:quantity for adding item and quantity\n- use ' ' to split for batch update"],[2,"View Inventory: Check the inventory quantity of each item"],[3,"Update Inventory: Update the inventory quantity of a specific item"],[4,"Search: Searching a specific item from inventory"],[5, "Export: Export data as .csv"],[6,"Log Out: Log out current account"],[7,"Admin Menu: Control panel for admin"]]
+    command = [[0, "Help: Print out this menu again"], [1,"Inventory Management: add, remove or update item(s) inside this system\n- type item_name:quantity for adding item and quantity\n- use ' ' to split for batch update"],[2,"View Inventory: Check the inventory quantity of each item"],[3,"Search: Searching a specific item from inventory"],[4, "Export: Export data as .csv"],[5,"Dashboard: User settings"],[6,"Log Out: Log out current account"],[7,"Admin Menu: Control panel for admin"]]
     if(not admin):
         command.pop()
     print(tabulate(command, headers=["Code","Describe"], tablefmt="simple_grid"))
@@ -65,7 +67,8 @@ def management():
     print(f"{Back.GREEN}PAGE / INVENTORY MANAGEMENT\n")
     print("[1] Add item")
     print("[2] Remove item")
-    print("[3] Exit this page")
+    print("[3] Update Inventory")
+    print("[4] Exit this page")
     while True:
         action = int(input("\nChoose an action: "))
         match action:
@@ -103,6 +106,28 @@ def management():
                 except IndexError:
                     echoMessage('error', "Value out of range")
             case 3:
+                total_inventory = getItems(False)
+                print(tabulate(total_inventory, headers=["Code", "Item name"], tablefmt="simple_grid"))  
+                try:
+                    item_code = int(input("Which item do you want to update: "))
+                    item_name = total_inventory[item_code][1]
+                    type = input("Which info you want to update [N]Item name [Q]Quantity: ")
+                    match type.lower():
+                        case "n":
+                            new_name = input("Updated item name: ")
+                            inventory[new_name] = inventory.pop(item_name)
+                            echoMessage('info', f"Updated the name of {item_name} to {new_name}")
+                            itg.log(f"[{current_user_name}] Updated the name of {item_name} to {new_name}")
+                        case "q":
+                            new_quantity = int(input("Updated quantity: "))
+                            inventory[item_name] = new_quantity
+                            echoMessage('info', f"Item already exit")
+                            itg.log(f"[{current_user_name}] Updated the quantity of {item_name} to {new_quantity}")
+                        case _:
+                            echoMessage('error', "Invalid option")
+                except IndexError:
+                    echoMessage('error', "Value out of range")
+            case 4:
                 break
             case _:
                 echoMessage('error', "Invalid option")
@@ -113,44 +138,9 @@ def view():
     print(tabulate(getItems(True), headers=["Item", "Quantity"], tablefmt="psql"))
     itg.log(f"[{current_user_name}] Get inventory")
     while True:
-        action = input("\nPress Enter to exit")
+        action = input("\nPress Enter to exit...")
         match action:
             case "":
-                break
-            case _:
-                echoMessage('error', "Invalid option")
-
-def update():
-    cls()
-    print(f"{Back.GREEN}PAGE / UPDATE INVENTORY\n")
-    total_inventory = getItems(False)
-    print(tabulate(total_inventory, headers=["Code", "Item name"], tablefmt="simple_grid"))  
-    print("\n[1] Update inventory")
-    print("[2] Exit this page")
-    while True:
-        action = int(input("\nChoose an action: "))
-        match action:
-            case 1:
-                try:
-                    item_code = int(input("Which item do you want to update: "))
-                    item_name = total_inventory[item_code][1]
-                    type = int(input("Which info you want to update [0]Item name [1]Quantity: "))
-                    match type:
-                        case 0:
-                            new_name = input("Updated item name: ")
-                            inventory[new_name] = inventory.pop(item_name)
-                            echoMessage('info', f"Updated the name of {item_name} to {new_name}")
-                            itg.log(f"[{current_user_name}] Updated the name of {item_name} to {new_name}")
-                        case 1:
-                            new_quantity = int(input("Updated quantity: "))
-                            inventory[item_name] = new_quantity
-                            echoMessage('info', f"Item already exit")
-                            itg.log(f"[{current_user_name}] Updated the quantity of {item_name} to {new_quantity}")
-                        case _:
-                            echoMessage('error', "Invalid option")
-                except IndexError:
-                    echoMessage('error', "Value out of range")
-            case 2:
                 break
             case _:
                 echoMessage('error', "Invalid option")
@@ -161,7 +151,7 @@ def search():
     total_inventory = getItems(True)
     found = False
     while True:
-        action = input("\nType name of the product (or press enter to exit): ")
+        action = input("\nType name of the product (or press Enter to exit...): ")
         if action == "":
             break
         found = False
@@ -186,7 +176,7 @@ def export():
             itg.log(f"[{current_user_name}] Inventory exported")
         except Exception:
             echoMessage('error', Exception)
-        action = input("\nPress Enter to exit")
+        action = input("\nPress Enter to exit...")
         match action:
             case "":
                 break
@@ -229,12 +219,70 @@ def addUser(group = "User"):
                 else:
                     echoMessage('error', "Try to set up a secure password")
 
+def dashboard():
+    global current_user_name
+    while True:
+        cls()
+        print(f"{Back.GREEN}PAGE / DASHBOARD [{current_user_name}]\n")
+        print("[1] Account Information")
+        print("[2] Preference")
+        print("[3] Exit Control Panel")
+        action = int(input("\nChoose an action: "))
+        match action:
+            case 1:
+                cls()
+                print("[1] Account Name")
+                print("[2] Account Password")
+                print("[3] Exit this page")
+                while True:
+                    action_info = int(input("\nChoose an action: "))
+                    match action_info:
+                        case 1:
+                            new_user_name = input("Type your new account name: ")
+                            um.updateUser("user_name", current_user_name, new_user_name)
+                            echoMessage("success", f'Successful update user name from "{current_user_name}" to "{new_user_name}"')
+                            current_user_name = new_user_name
+                            exit_action = input("Press Enter to exit...")
+                            match exit_action:
+                                case "":
+                                    break
+                        case 2:
+                            old_password = getpass.getpass("Type your current user password: ")
+                            if um.verifyUser(current_user_name, old_password):
+                                print("\nPlease follow this role to setup your password:")
+                                print("- MUST include at least ONE Number & Uppercase Letter & Lowercase Letter & Symbol\n- Should between 8 - 32 latter")
+                                new_user_password = getpass.getpass("Type your new password: ")
+                                if um.passwordVerify(new_user_password) == "OK":
+                                    user_password_confirm = getpass.getpass("Type your password again to confirm: ")
+                                    if new_user_password == user_password_confirm:
+                                        result = um.updateUser("user_password", current_user_name, new_user_password)
+                                        if result == "OK":
+                                            echoMessage('success', "Successful to update your password. System auto log-out now...")
+                                            global log_out
+                                            log_out = True
+                                            time.sleep(2)
+                                            return
+                                    else:
+                                        echoMessage('error', "The two inputs do not match")
+                                else:
+                                    echoMessage('error', "Try to set up a secure password")
+                            else:
+                                echoMessage('error', "Password incorrect")
+                        case 3:
+                            break
+            case 2:
+                echoMessage('info', "OK")
+            case 3:
+                break
+
 def adminMenu():
     cls()
-    command = [[1,"User Management: add or remove user(s)"], [2, "View User: List out all user"],[3, "Exit Control Panel: Quit this Admin Control Panel"]]
-    print(tabulate(command, headers=["Code","Describe"], tablefmt="simple_grid"))
+    print(f"{Back.GREEN}PAGE / ADMIN CONTROL PANEL\n")
+    print("[1] User Management")
+    print("[2] View User")
+    print("[3] Exit Control Panel\n")
     while True:
-        aka = int(input("Choose an action(ACP): "))
+        aka = int(input("Choose an action: "))
         match aka:
             case 1:
                 print("\n[1] Create user")
@@ -276,39 +324,45 @@ def main():
     loadDB()
     global firstLogIn
     while True:
-        cls()
-        if firstLogIn: 
-            echoMessage('success', f"Welcome {current_user_name} [{um.getUserGroup(user_name)}]")
-            firstLogIn = False
-        menu()
-        action = int(input("Choose an action: "))
-        match action:
-            case 0:
-                menu()
-            case 1:
-                management()
-            case 2:
-                view()
-            case 3:
-                update()
-            case 4:
-                search()
-            case 5:
-                export()
-            case 6:
-                quitNow()
-                break
-            case 7:
-                if admin:
-                    adminMenu()
-                else:
+        if log_out == False:
+            cls()
+            if firstLogIn: 
+                echoMessage('success', f"Welcome {current_user_name} [{um.getUserGroup(user_name)}]")
+                firstLogIn = False
+            menu()
+            action = int(input("Choose an action: "))
+            match action:
+                case 0:
+                    menu()
+                case 1:
+                    management()
+                case 2:
+                    view()
+                case 3:
+                    search()
+                case 4:
+                    export()
+                case 5:
+                    dashboard()
+                case 6:
+                    quitNow()
+                    itg.log(f"[{current_user_name}] sign-out system")
+                    break
+                case 7:
+                    if admin:
+                        adminMenu()
+                    else:
+                        print("Invalid action")
+                case _:
                     print("Invalid action")
-            case _:
-                print("Invalid action")
+        else:
+            break
 
 if __name__ == '__main__':
     while True:
         cls()
+        log_out = False
+        firstLogIn = True
         command = [[1,"Sign In: Log in to this system"],[2, "Sign Up: Create a new user account"] , [3,"Exist: Quit this system"]]
         print(tabulate(command, headers=["Code","Describe"], tablefmt="simple_grid"))
         aka = int(input("Choose an action: "))
@@ -320,12 +374,14 @@ if __name__ == '__main__':
                         current_user_name = user_name
                         user_password = getpass.getpass('PASSWORD:')
                         if um.verifyUser(user_name, user_password):
+                            itg.log(f'[{current_user_name}] User "{user_name}" success to sign-in system')
                             if itg.verifyMD5():
                                 if um.getUserGroup(user_name) == "Admin":
                                     admin = True
                                 main()
                             else:
                                 echoMessage('error', "Database integrity not pass. System ended")
+                                itg.log(f'[{current_user_name}] system quit due to database integrity test fail')
                             break
                         else:
                             echoMessage('error', "Password incorrect")

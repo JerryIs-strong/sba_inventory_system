@@ -1,0 +1,67 @@
+2025-08-05 17:00:25.414925+08:00 [i-show-speed] Updated the name of I_SWAY to i-sway
+2025-08-05 17:04:33.500114+08:00 [i-show-speed] User "i-show-speed" success to sign-in system
+2025-08-05 17:06:04.838991+08:00 [i-show-speed] User "i-show-speed" success to sign-in system
+2025-08-05 17:06:08.073720+08:00 [i-show-speed] Inventory updated
+2025-08-05 17:06:08.074109+08:00 [i-show-speed] sign-out system
+2025-08-05 17:07:08.272044+08:00 [Admin] User "Admin" success to sign-in system
+2025-08-05 17:07:17.303943+08:00 [Admin] YUQ1 have been removed
+2025-08-05 17:07:22.015630+08:00 [Admin] I_SWAY have been removed
+2025-08-05 17:07:27.071325+08:00 [Admin] HER have been removed
+2025-08-05 17:07:30.257144+08:00 [Admin] We_are have been removed
+2025-08-05 17:08:17.619340+08:00 [Admin] Added item iPhone with quantity 0
+2025-08-05 17:08:17.619615+08:00 [Admin] Added item 14 with quantity 600
+2025-08-05 17:08:17.619770+08:00 [Admin] Added item 15 with quantity 300
+2025-08-05 17:08:17.619926+08:00 [Admin] Added item 16 with quantity 90
+2025-08-05 17:08:17.620074+08:00 [Admin] Added item AirPods with quantity 3000
+2025-08-05 17:08:40.602081+08:00 [Admin] iPhone have been removed
+2025-08-05 17:08:42.728582+08:00 [Admin] 14 have been removed
+2025-08-05 17:08:44.321866+08:00 [Admin] 15 have been removed
+2025-08-05 17:08:47.263933+08:00 [Admin] 16 have been removed
+2025-08-05 17:08:49.280549+08:00 [Admin] AirPods have been removed
+2025-08-05 17:09:04.842115+08:00 [Admin] Added item "iPhone with quantity 0
+2025-08-05 17:09:04.842276+08:00 [Admin] Added item 14" with quantity 200
+2025-08-05 17:09:18.379836+08:00 [Admin] "iPhone have been removed
+2025-08-05 17:09:21.719103+08:00 [Admin] 14" have been removed
+2025-08-05 17:40:39.702163+08:00 [i-show-speed] User "i-show-speed" success to sign-in system
+2025-08-05 17:41:08.928732+08:00 [i-show-speed] User "i-show-speed" success to sign-in system
+2025-08-05 17:41:10.273721+08:00 [i-show-speed] Inventory exported
+2025-08-05 17:42:19.458781+08:00 [i-show-speed] User "i-show-speed" success to sign-in system
+2025-08-05 17:43:28.811206+08:00 [speed-pro] User "speed-pro" success to sign-in system
+2025-08-05 17:44:20.970118+08:00 [speed-Pro] User "speed-Pro" success to sign-in system
+2025-08-05 17:46:34.753980+08:00 [i-speed] User "i-speed" success to sign-in system
+2025-08-05 17:50:42.293662+08:00 [speeed] User "speeed" fail to sign-in system
+2025-08-05 17:50:55.565892+08:00 [speeed] User "speeed" fail to sign-in system
+2025-08-05 17:51:08.534550+08:00 [speeed] User "speeed" fail to sign-in system
+2025-08-05 17:51:48.033219+08:00 [Admin] User "Admin" success to sign-in system
+2025-08-05 17:52:15.257202+08:00 [Admin] User "Admin" success to sign-in system
+2025-08-05 17:52:31.000077+08:00 [Admin] sign-out system
+2025-08-05 17:52:40.431806+08:00 [speeed] User "speeed" fail to sign-in system
+2025-08-05 17:53:08.584784+08:00 [Admin] User "Admin" success to sign-in system
+2025-08-05 17:54:59.536272+08:00 [i-speed] User "i-speed" success to sign-in system
+2025-08-05 17:55:51.794341+08:00 [i-show-speed] User "i-show-speed" fail to sign-in system
+2025-08-05 17:56:55.796605+08:00 [Admin] User "Admin" success to sign-in system
+2025-08-05 17:57:07.719309+08:00 [Admin] User "Admin" success to sign-in system
+2025-08-05 17:58:26.478457+08:00 [Admin] User "Admin" success to sign-in system
+2025-08-05 17:58:46.266011+08:00 [Admin] sign-out system
+2025-08-05 17:59:13.484029+08:00 [i-show-speed] User "i-show-speed" success to sign-in system
+2025-08-05 17:59:41.143308+08:00 [i-show-speed] User "i-show-speed" fail to sign-in system
+2025-08-05 17:59:59.185582+08:00 [i-show-speed] User "i-show-speed" success to sign-in system
+2025-08-05 18:00:21.575134+08:00 [i-show-speed] sign-out system
+2025-08-05 18:00:35.279604+08:00 [i-show-speed] User "i-show-speed" success to sign-in system
+2025-08-05 18:02:45.791811+08:00 [i-show-speed2] User "i-show-speed2" success to sign-in system
+2025-08-05 18:03:41.022336+08:00 [i-show-speed2] User "i-show-speed2" fail to sign-in system
+2025-08-05 18:03:54.329117+08:00 [i-show-speed2] User "i-show-speed2" success to sign-in system
+2025-08-05 18:03:59.415366+08:00 [i-show-speed2] sign-out system
+2025-08-05 18:04:10.288480+08:00 [i-show-speed] User "i-show-speed" success to sign-in system
+2025-08-05 18:04:21.407395+08:00 [i-show-speed] sign-out system
+2025-08-05 18:04:29.211386+08:00 [i-show-speed] User "i-show-speed" success to sign-in system
+2025-08-05 18:04:32.817385+08:00 [i-show-speed] sign-out system
+2025-08-05 18:07:33.135030+08:00 [i-show-speed] User "i-show-speed" success to sign-in system
+2025-08-05 18:08:06.292673+08:00 [i-show-speed] User "i-show-speed" fail to sign-in system
+2025-08-05 18:08:19.166044+08:00 [i-show-speed] User "i-show-speed" success to sign-in system
+2025-08-05 18:09:43.655003+08:00 [i-show-speed] User "i-show-speed" success to sign-in system
+2025-08-05 18:10:07.488507+08:00 [i-show-speed] User "i-show-speed" fail to sign-in system
+2025-08-05 18:10:17.574698+08:00 [i-show-speed] User "i-show-speed" success to sign-in system
+2025-08-05 18:10:23.712971+08:00 [i-show-speed] sign-out system
+2025-08-05 18:10:34.421424+08:00 [Admin] User "Admin" success to sign-in system
+2025-08-05 18:10:59.996848+08:00 [Admin] sign-out system

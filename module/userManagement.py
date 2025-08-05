@@ -62,6 +62,7 @@ class UserManager:
             cur = con.cursor()
             cur.execute('DELETE FROM users WHERE user_name = ?', (user_name,))
             con.commit()
+            os.remove(f"user/configs/{hashlib.sha256(user_name.encode('utf-8')).hexdigest()[:15]}.json")
     
     def verifyUser(self, user_name, user_password):
         with sqlite3.connect("data/user.db") as con:
@@ -78,19 +79,18 @@ class UserManager:
             else:
                 return False
 
-    def updateUser(self, type, old_user_info, new_user_info, addition_user_info = None):
+    def updateUser(self, type, old_user_info, new_user_info):
         with sqlite3.connect("data/user.db") as con:
             cur = con.cursor()
             
             if type == "user_name":
                 cur.execute('UPDATE users SET user_name = ? WHERE user_name = ?', (new_user_info, old_user_info))
+                os.rename(f"user/configs/{hashlib.sha256(old_user_info.encode('utf-8')).hexdigest()[:15]}.json", f"user/configs/{hashlib.sha256(new_user_info.encode('utf-8')).hexdigest()[:15]}.json")
             elif type == "user_password":
-                cur.execute('UPDATE users SET user_password = ? WHERE user_name = ? AND user_password = ?', (self.hash_password(new_user_info), old_user_info, addition_user_info))
-            else:
-                return "Invalid type value"
+                cur.execute('UPDATE users SET user_password = ? WHERE user_name = ?', (self.hash_password(new_user_info), old_user_info))
             
             con.commit()
-            return "Successful update user name/password"
+            return "OK"
         
     def passwordVerify(self, password):
         symbol = "!@#$%^&*()-=+<>/,.?:;"
