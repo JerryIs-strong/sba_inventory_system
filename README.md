@@ -3,8 +3,8 @@
 Sample account: \
 [Admin] 
 - USERNAME: Admin
-- PASSWORD: supersecurepassword
+- PASSWORD: Password01#
 
 [User]
-- USERNAME: Jason
-- PASSWORD: iamjason0908
+- USERNAME: i-show-speed
+- PASSWORD: Speed1234@

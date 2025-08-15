@@ -9,15 +9,6 @@ import getpass
 import pytz
 from colorama import Fore, Style, Back, init
 import os
-import time
-
-
-### TODO: 
-### - [OK]Combine Update Inventory --> Inventory Management
-### - [OK]Add setting option for user
-### - optimize user experience
-### - [OK]add set password & user name option
-### - update log logic(temp & modified)
 
 inventory = {}
 current_user_name = ''
@@ -26,7 +17,7 @@ um = UserManager()
 init(autoreset=True)
 admin = False
 firstLogIn = True
-log_out = False
+lid = None
 
 def loadDB():
     global inventory
@@ -83,14 +74,14 @@ def management():
                             item_name, quantity = items[i].split(':')
                             inventory[item_name] = quantity
                             echoMessage('info', f"Added item {item_name} with quantity {quantity}")
-                            itg.log(f"[{current_user_name}] Added item {item_name} with quantity {quantity}")
+                            itg.log(f"[{current_user_name}] Added item {item_name} with quantity {quantity}(TEMP)")
                     else:
                         if items[i] in inventory:
                             echoMessage('error', f"Item already exit")
                         else:
                             inventory[items[i]] = 0
                             echoMessage('info', f"Added item {items[i]} with quantity 0")
-                            itg.log(f"[{current_user_name}] Added item {items[i]} with quantity 0")
+                            itg.log(f"[{current_user_name}] Added item {items[i]} with quantity 0(TEMP)")
             case 2:
                 total_inventory = getItems(False)
                 print(tabulate(total_inventory, headers=["Code", "Item name"], tablefmt="simple_grid"))
@@ -102,7 +93,7 @@ def management():
                             item_name = total_inventory[int(item_codes[i])][1]
                             del inventory[item_name]
                             echoMessage('info', f"{item_name} have been removed")
-                            itg.log(f"[{current_user_name}] {item_name} have been removed")
+                            itg.log(f"[{current_user_name}] {item_name} have been removed(TEMP)")
                 except IndexError:
                     echoMessage('error', "Value out of range")
             case 3:
@@ -117,12 +108,12 @@ def management():
                             new_name = input("Updated item name: ")
                             inventory[new_name] = inventory.pop(item_name)
                             echoMessage('info', f"Updated the name of {item_name} to {new_name}")
-                            itg.log(f"[{current_user_name}] Updated the name of {item_name} to {new_name}")
+                            itg.log(f"[{current_user_name}] Updated the name of {item_name} to {new_name}(TEMP)")
                         case "q":
                             new_quantity = int(input("Updated quantity: "))
                             inventory[item_name] = new_quantity
                             echoMessage('info', f"Item already exit")
-                            itg.log(f"[{current_user_name}] Updated the quantity of {item_name} to {new_quantity}")
+                            itg.log(f"[{current_user_name}] Updated the quantity of {item_name} to {new_quantity}(TEMP)")
                         case _:
                             echoMessage('error', "Invalid option")
                 except IndexError:
@@ -185,6 +176,7 @@ def export():
 
 def quitNow():
     cls()
+    global lid
     aka = input("Would you like to save the change Yes[Y] No[N]: ")
     match aka.lower():
         case "y":
@@ -193,7 +185,9 @@ def quitNow():
             echoMessage('success', "Update database successfully")
             itg.log(f"[{current_user_name}] Inventory updated")
             itg.writeMD5()
+            itg.endLogService(lid, True)
         case "n":
+            itg.endLogService(lid)
             return
 
 def addUser(group = "User"):
@@ -257,11 +251,11 @@ def dashboard():
                                     if new_user_password == user_password_confirm:
                                         result = um.updateUser("user_password", current_user_name, new_user_password)
                                         if result == "OK":
-                                            echoMessage('success', "Successful to update your password. System auto log-out now...")
-                                            global log_out
-                                            log_out = True
-                                            time.sleep(2)
-                                            return
+                                            echoMessage('success', "Successful to update your password.")
+                                            exit_action = input("Press Enter to exit...")
+                                            match exit_action:
+                                                case "":
+                                                    break
                                     else:
                                         echoMessage('error', "The two inputs do not match")
                                 else:
@@ -324,44 +318,40 @@ def main():
     loadDB()
     global firstLogIn
     while True:
-        if log_out == False:
-            cls()
-            if firstLogIn: 
-                echoMessage('success', f"Welcome {current_user_name} [{um.getUserGroup(user_name)}]")
-                firstLogIn = False
-            menu()
-            action = int(input("Choose an action: "))
-            match action:
-                case 0:
-                    menu()
-                case 1:
-                    management()
-                case 2:
-                    view()
-                case 3:
-                    search()
-                case 4:
-                    export()
-                case 5:
-                    dashboard()
-                case 6:
-                    quitNow()
-                    itg.log(f"[{current_user_name}] sign-out system")
-                    break
-                case 7:
-                    if admin:
-                        adminMenu()
-                    else:
-                        print("Invalid action")
-                case _:
+        cls()
+        if firstLogIn: 
+            echoMessage('success', f"Welcome {current_user_name} [{um.getUserGroup(user_name)}]")
+            firstLogIn = False
+        menu()
+        action = int(input("Choose an action: "))
+        match action:
+            case 0:
+                menu()
+            case 1:
+                management()
+            case 2:
+                view()
+            case 3:
+                search()
+            case 4:
+                export()
+            case 5:
+                dashboard()
+            case 6:
+                itg.log(f"[{current_user_name}] sign-out system")
+                quitNow()
+                break
+            case 7:
+                if admin:
+                    adminMenu()
+                else:
                     print("Invalid action")
-        else:
-            break
+            case _:
+                print("Invalid action")
 
 if __name__ == '__main__':
     while True:
         cls()
-        log_out = False
         firstLogIn = True
         command = [[1,"Sign In: Log in to this system"],[2, "Sign Up: Create a new user account"] , [3,"Exist: Quit this system"]]
         print(tabulate(command, headers=["Code","Describe"], tablefmt="simple_grid"))
@@ -374,6 +364,7 @@ if __name__ == '__main__':
                         current_user_name = user_name
                         user_password = getpass.getpass('PASSWORD:')
                         if um.verifyUser(user_name, user_password):
+                            lid = itg.initLogService()
                             itg.log(f'[{current_user_name}] User "{user_name}" success to sign-in system')
                             if itg.verifyMD5():
                                 if um.getUserGroup(user_name) == "Admin":
