@@ -17,8 +17,7 @@ class UserManager:
             cur = con.cursor()
             cur.execute('''
                 CREATE TABLE IF NOT EXISTS users (
-                    user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    user_name VARCHAR(255) NOT NULL UNIQUE, 
+                    user_name VARCHAR(255) PRIMARY KEY NOT NULL UNIQUE, 
                     user_password VARCHAR(255) NOT NULL,
                     user_group VARCHAR(255) NOT NULL
                 )
@@ -36,18 +35,11 @@ class UserManager:
     def createUser(self, user_name, password, user_group):
         with sqlite3.connect("data/user.db") as con:
             cur = con.cursor()
-            cur.execute('SELECT COUNT(*) FROM users WHERE user_name = ?', (user_name,))
-            exists = cur.fetchone()[0]
-
-            if not exists:
-                config_file_path = f"user/configs/{hashlib.sha256(user_name.encode('utf-8')).hexdigest()[:15]}.json"
-                with open(config_file_path, "w") as file:
-                    file.write("{}")
-                cur.execute('INSERT INTO users (user_name, user_password, user_group) VALUES (?, ?, ?)', (user_name, self.hash_password(password), user_group))
-                con.commit()
-                return "OK"
-            else:
-                return "ERROR"
+            config_file_path = f"user/configs/{hashlib.sha256(user_name.encode('utf-8')).hexdigest()[:15]}.json"
+            with open(config_file_path, "w") as file:
+                file.write("{}")
+            cur.execute('INSERT INTO users (user_name, user_password, user_group) VALUES (?, ?, ?)', (user_name, self.hash_password(password), user_group))
+            con.commit()
 
     def getUserList(self):
         with sqlite3.connect("data/user.db") as con:
@@ -64,7 +56,7 @@ class UserManager:
             con.commit()
             os.remove(f"user/configs/{hashlib.sha256(user_name.encode('utf-8')).hexdigest()[:15]}.json")
     
-    def verifyUser(self, user_name, user_password):
+    def logIn(self, user_name, user_password):
         with sqlite3.connect("data/user.db") as con:
             cur = con.cursor()
             cur.execute('SELECT user_password FROM users WHERE user_name = ?', (user_name,))
@@ -107,4 +99,15 @@ class UserManager:
             return "OK"
         else:
             return "FAIL"
+            
+    def userNameVerify(self, user_name):
+        with sqlite3.connect("data/user.db") as con:
+            cur = con.cursor()
+            cur.execute('SELECT COUNT(*) FROM users WHERE user_name = ?', (user_name,))
+            exists = cur.fetchone()[0]
+
+            if exists:
+                return "FAIL"
+            else:
+                return "OK"
 

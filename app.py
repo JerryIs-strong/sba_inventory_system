@@ -197,21 +197,21 @@ def addUser(group = "User"):
     while True:
         user_name = input("[1/3]: Type your user name: ")
         while True:
-                user_password = getpass.getpass("[2/3]: Type your password: ")
-                if(um.passwordVerify(user_password) == "OK"):
-                    user_password_confirm = getpass.getpass("[3/3]: Type your password again to confirm: ")
-                    if user_password == user_password_confirm:
-                        create = um.createUser(user_name, user_password, group)
-                        if create == 'OK':
+                if um.userNameVerify(user_name) == "OK":
+                    user_password = getpass.getpass("[2/3]: Type your password: ")
+                    if(um.passwordVerify(user_password) == "OK"):
+                        user_password_confirm = getpass.getpass("[3/3]: Type your password again to confirm: ")
+                        if user_password == user_password_confirm:
+                            um.createUser(user_name, user_password, group)
                             echoMessage('success', f'Successful to create user "{user_name}"\n')
                             return
                         else:
-                            echoMessage('error', "Username already exists")
-                            break
+                            echoMessage('error', "The two inputs do not match")
                     else:
-                        echoMessage('error', "The two inputs do not match")
+                        echoMessage('error', "Try to set up a secure password")
                 else:
-                    echoMessage('error', "Try to set up a secure password")
+                    echoMessage('error', "Username already exists")
+                    break
 
 def dashboard():
     global current_user_name
@@ -242,7 +242,7 @@ def dashboard():
                                     break
                         case 2:
                             old_password = getpass.getpass("Type your current user password: ")
-                            if um.verifyUser(current_user_name, old_password):
+                            if um.logIn(current_user_name, old_password):
                                 print("\nPlease follow this role to setup your password:")
                                 print("- MUST include at least ONE Number & Uppercase Letter & Lowercase Letter & Symbol\n- Should between 8 - 32 latter")
                                 new_user_password = getpass.getpass("Type your new password: ")
@@ -363,7 +363,7 @@ if __name__ == '__main__':
                     if user_name in um.getUserList():
                         current_user_name = user_name
                         user_password = getpass.getpass('PASSWORD:')
-                        if um.verifyUser(user_name, user_password):
+                        if um.logIn(user_name, user_password):
                             lid = itg.initLogService()
                             itg.log(f'[{current_user_name}] User "{user_name}" success to sign-in system')
                             if itg.verifyMD5():
