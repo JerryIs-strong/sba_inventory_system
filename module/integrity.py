@@ -16,6 +16,12 @@ def writeMD5():
     with open('data/system.json', 'w') as system_file:
         json.dump(data, system_file)
 
+def sysInfo():
+    with open('data/system.json') as system_file:
+        data = json.load(system_file)
+        version = data["version"]
+    return version
+
 def verifyMD5():
     db_hash = hashlib.md5(open('data/inventoryDB.json', 'rb').read()).hexdigest()
     with open('data/system.json') as system_file:
