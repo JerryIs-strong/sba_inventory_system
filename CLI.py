@@ -190,16 +190,16 @@ def quitNow():
             itg.endLogService(lid)
             return
 
-def addUser(group = "User"):
+def addUser(group = "Admin"):
     cls()
     print("\nPlease follow this role to setup your password:")
     print("- MUST include at least ONE Number & Uppercase Letter & Lowercase Letter & Symbol\n- Should between 8 - 32 latter")
     while True:
         user_name = input("[1/3]: Type your user name: ")
         while True:
-                if um.userNameVerify(user_name) == "OK":
+                if um.userNameVerify(user_name):
                     user_password = getpass.getpass("[2/3]: Type your password: ")
-                    if(um.passwordVerify(user_password) == "OK"):
+                    if(um.passwordVerify(user_password)):
                         user_password_confirm = getpass.getpass("[3/3]: Type your password again to confirm: ")
                         if user_password == user_password_confirm:
                             um.createUser(user_name, user_password, group)

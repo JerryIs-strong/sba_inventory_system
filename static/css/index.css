@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Kings&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+*{
+    box-sizing: border-box;
+}
+
+body{
+    background-color: var(--primary-background-color);
+    color: var(--font-color);
+    margin: 0;
+}
+
+h3{
+    font-family: "Kings", cursive;
+    margin: 0;
+    font-size: 35px;
+}
+
+nav{
+    background-color: var(--second-background-color);
+    height: fit-content;
+    width: 100%;
+    padding: 10px 20px;
+}
+
+.sidebar{
+    height: 100%;
+    width: fit-content;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    background-color: var(--second-background-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.toolbtn, .toolbtnX{
+    padding: 20px;
+    font-family: "Noto Sans", sans-serif;
+    cursor: pointer;
+}
+
+.active{
+    background-image: linear-gradient(129deg, #dbb1d4, #9781e4, #7190f3);
+}
+
+iframe{
+    width: calc(100% - 218px);
+    height: 100%;
+    position: absolute;
+    top: 70px;
+    right: 0;
+}
+
+.signout{
+    background-image: linear-gradient(129deg, #e4cdcd,#f37171);
+    border-left: 10px solid rgb(250, 86, 86);
+    margin-top: auto; 
+    color: var(--font-color) !important;
+}
+
+a{
+    text-decoration: none;
+}
+
+.signout:visited{
+    color: var(--font-color) !important;
+}

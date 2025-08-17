@@ -3,11 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory System {{version}}</title>
+    <title>Inventory System | {{version}}</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/colors.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/login.css')}}">
 </head>
 <body>
-    <form action="/submit" method="get">
-        <input type="text" name="user" id="">
-    </form>
+    <div class="main">
+        <h1>Login</h1>
+        <form action="{{url_for('login')}}" method="post">
+            <input type="text" name="username" id="username" placeholder="User Name">
+            <input type="password" name="password" id="password" placeholder="Password">      
+            {% with message = get_flashed_messages() %}
+                {% if message %}
+                    <p class="error">{{ message[0] }}</p>
+                {% endif %}
+            {% endwith %}
+            <button type="submit">Submit</button>
+        </form>
+        <p>Don't have an account yet? <a href="{{url_for('signup')}}">Create account</a></p>
+    </div>
 </body>
 </html>

@@ -35,9 +35,6 @@ class UserManager:
     def createUser(self, user_name, password, user_group):
         with sqlite3.connect("data/user.db") as con:
             cur = con.cursor()
-            config_file_path = f"user/configs/{hashlib.sha256(user_name.encode('utf-8')).hexdigest()[:15]}.json"
-            with open(config_file_path, "w") as file:
-                file.write("{}")
             cur.execute('INSERT INTO users (user_name, user_password, user_group) VALUES (?, ?, ?)', (user_name, self.hash_password(password), user_group))
             con.commit()
 
@@ -54,7 +51,6 @@ class UserManager:
             cur = con.cursor()
             cur.execute('DELETE FROM users WHERE user_name = ?', (user_name,))
             con.commit()
-            os.remove(f"user/configs/{hashlib.sha256(user_name.encode('utf-8')).hexdigest()[:15]}.json")
     
     def logIn(self, user_name, user_password):
         with sqlite3.connect("data/user.db") as con:
@@ -77,12 +73,11 @@ class UserManager:
             
             if type == "user_name":
                 cur.execute('UPDATE users SET user_name = ? WHERE user_name = ?', (new_user_info, old_user_info))
-                os.rename(f"user/configs/{hashlib.sha256(old_user_info.encode('utf-8')).hexdigest()[:15]}.json", f"user/configs/{hashlib.sha256(new_user_info.encode('utf-8')).hexdigest()[:15]}.json")
             elif type == "user_password":
                 cur.execute('UPDATE users SET user_password = ? WHERE user_name = ?', (self.hash_password(new_user_info), old_user_info))
             
             con.commit()
-            return "OK"
+            return True
         
     def passwordVerify(self, password):
         symbol = "!@#$%^&*()-=+<>/,.?:;"
@@ -96,9 +91,9 @@ class UserManager:
         has_number = any(char in num for char in password)
 
         if has_symbol and has_lower and has_upper and has_number and len(password) >= 8 and len(password) <= 32:
-            return "OK"
+            return True
         else:
-            return "FAIL"
+            return False
             
     def userNameVerify(self, user_name):
         with sqlite3.connect("data/user.db") as con:
@@ -107,7 +102,7 @@ class UserManager:
             exists = cur.fetchone()[0]
 
             if exists:
-                return "FAIL"
+                return False
             else:
-                return "OK"
+                return True
 

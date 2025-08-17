@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory System | {{version}}</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/colors.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/signup.css')}}">
+</head>
+<body>
+    <div class="main">
+        <h1>Signup</h1>
+        <form action="{{url_for('signup')}}"  method="post" onsubmit="return validateForm()">
+            <input type="text" name="username" id="username" placeholder="User Name">
+            <input type="password" name="password" id="password" placeholder="Password">
+            <input type="password" name="password" id="password_confirm" placeholder="Type password again">
+            {% if from_admin %}
+                <select name="group" id="usergroup">
+                    <option value="default">---Select---</option>
+                    <option value="admin">Admin</option>
+                    <option value="user">User</option>
+                </select>
+            {% endif %}
+            <button type="submit">Submit</button>
+        </form>
+        <p>Already have an account? <a href="{{url_for('login')}}">Login</a></p>
+    </div>
+    <div class="snapNoti">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{% autoescape false %}{{ message }}{% endautoescape %}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
+    <script>
+        function validateForm() {
+            const newPassword = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("password_confirm").value;
+            if (newPassword != '' && confirmPassword != ''){
+                if (newPassword == confirmPassword) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+    </script>
+</body>
+</html>

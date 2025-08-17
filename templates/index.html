@@ -3,11 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory System {{version}}</title>
+    <title>Inventory System | {{version}}</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/colors.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/index.css')}}">
 </head>
 <body>
-    <form>
+    <nav>
+        <h3>Welcome back, {{username}}! | Pannel {{version}}</h3>
+    </nav>
+    <div class="main">
+        <div class="sidebar">
+            <div class="toolbtn active" data-page="/iManagement">Inventory Management</div>
+            <div class="toolbtn" data-page="/iView">View Inventory</div>
+            <div class="toolbtn" data-page="/search">Search</div>
+            <div class="toolbtn" data-page="/export">Export Data</div>
+            <div class="toolbtn" data-page="/dashboard">My Dashboard</div>
+            {% if from_admin %}
+            <div class="toolbtn" data-page="/admin">Admin Panel</div>
+            {% endif %}
+            <a class="toolbtnX signout" href="{{url_for('logout')}}">Signout</a>
+        </div>
+        <iframe src="/iManagement" frameborder="0" id="mainFrame"></iframe>
+    </div>
+    <script>
+        window.onload = function() {
+            var peremeter = "{{ re_dir }}";
+            if (peremeter) {
+                document.getElementById("mainFrame").src = '/' + peremeter;
 
-    </form>
+                document.querySelectorAll('.toolbtn').forEach(btn => {
+                    btn.classList.remove("active");
+                });
+
+                document.querySelectorAll('.toolbtn').forEach(btn => {
+                    if (btn.getAttribute("data-page") == ('/' + peremeter)){
+                        btn.classList.add("active");
+                    }
+                }); 
+            }
+        }
+
+        document.querySelectorAll('.toolbtn').forEach((button) => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.toolbtn').forEach(btn => {
+                    btn.classList.remove("active");
+                });
+                button.classList.add("active");
+                document.getElementById("mainFrame").src = button.getAttribute("data-page")
+            });
+        });
+    </script>
 </body>
 </html>
