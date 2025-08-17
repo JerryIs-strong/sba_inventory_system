@@ -12,15 +12,21 @@
         <h1>Login</h1>
         <form action="{{url_for('login')}}" method="post">
             <input type="text" name="username" id="username" placeholder="User Name">
-            <input type="password" name="password" id="password" placeholder="Password">      
-            {% with message = get_flashed_messages() %}
-                {% if message %}
-                    <p class="error">{{ message[0] }}</p>
-                {% endif %}
-            {% endwith %}
+            <input type="password" name="password" id="password" placeholder="Password">
             <button type="submit">Submit</button>
         </form>
         <p>Don't have an account yet? <a href="{{url_for('signup')}}">Create account</a></p>
+    </div>
+    <div class="snapNoti">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{% autoescape false %}{{ message }}{% endautoescape %}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
     </div>
 </body>
 </html>

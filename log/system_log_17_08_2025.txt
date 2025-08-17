@@ -2,3 +2,17 @@
 2025-08-17 00:47:03.781718+08:00 [Admin] sign-out system
 2025-08-17 13:34:08.572114+08:00 [Test] User "Test" success to sign-in system
 2025-08-17 13:35:16.208444+08:00 [Test] sign-out system
+2025-08-17 14:18:12.275091+08:00 [Admin] User "Admin" try to signin into system
+2025-08-17 14:18:37.492526+08:00 [Admin] User "Admin" try to signin into system
+2025-08-17 14:19:02.950056+08:00 [admin] User "admin" try to signin into system
+2025-08-17 14:19:10.776328+08:00 [] User "" try to signin into system
+2025-08-17 14:19:13.006913+08:00 [asd] User "asd" try to signin into system
+2025-08-17 14:20:01.490939+08:00 [Guest] User "asdad" try to signin into system
+2025-08-17 14:20:30.466357+08:00 [Admin] system quit due to database integrity test fail
+2025-08-17 14:25:41.506087+08:00 [Admin] system quit due to database integrity test fail
+2025-08-17 14:35:18.955272+08:00 [Admin] System unlocked
+2025-08-17 14:36:41.960224+08:00 [Admin] System unlocked
+2025-08-17 14:36:58.915988+08:00 [Admin] User "Admin" success to sign-in system
+2025-08-17 14:37:19.301282+08:00 [Guest] User "Admin" try to signin into system
+2025-08-17 14:37:26.296384+08:00 [Admin] system quit due to database integrity test fail
+2025-08-17 14:37:44.445295+08:00 [Admin] System unlocked
