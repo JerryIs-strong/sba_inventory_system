@@ -9,5 +9,47 @@
 </head>
 <body>
     <h1>Inventory Management \\</h1>
+    <form action="" method="post" data-fname="Add Item">
+        <div class="fill_column">
+            <label for="product_add">Product: </label>
+            <input type="text" name="product_add" id="product_add" required>
+        </div>
+        <p class="remind">* type item_name:quantity for adding item and quantity</p>
+        <p class="remind">* use ' ' to split for batch update</p>
+        <button type="submit">Add</button>
+    </form>
+    <form action="" method="post" data-fname="Remove Item">
+        <div class="fill_column">
+            <label for="product_remove">Product: </label>
+            <select name="product_remove" id="product_remove" required>
+                <option value="">---Select a product---</option>
+            </select>
+        </div>
+        <button type="submit">Remove</button>
+    </form>
+    <form action="" method="post" data-fname="Modify Item Information">
+        <div class="fill_column">
+            <label for="product_modify">Product: </label>
+            <select name="product_modify" id="product_modify" required>
+                <option value="">---Select a product---</option>
+            </select>
+        </div>
+        <div class="fill_column">
+            <label for="">Type: </label>
+            <div style="margin-right: 5px;">
+                <input type="radio" name="product_modify" id="product_modify_name" value="name">
+                <label for="product_modify_name">Name</label>
+            </div>
+            <div>
+                <input type="radio" name="product_modify" id="product_modify_quantity" value="quantity">
+                <label for="product_modify_quantity">Quantity</label>
+            </div>
+        </div>
+        <div class="fill_column">
+            <label for="product_modify_data">Name/Quantity: </label>
+            <input type="text" name="product_modify_data" id="product_modify_data" required>
+        </div>
+        <button type="submit">Update</button>
+    </form>
 </body>
 </html>

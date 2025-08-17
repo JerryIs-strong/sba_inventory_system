@@ -15,14 +15,14 @@ h1{
     font-family: "Shadows Into Light Two", cursive;
 }
 
-form{
+form,.output{
     border: 1px solid var(--second-background-color);
     padding: 30px 20px 10px 20px;
     border-radius: 10px;
     margin: 30px 0;
 }
 
-form::before{
+form::before,.output::before{
     content: attr(data-fname);
     color: aliceblue;
     position: absolute;
@@ -36,7 +36,7 @@ label{
     width: auto;
 }
 
-form input{
+form input, select{
     background-color: var(--second-background-color);
     border: none;
     padding: 10px;
@@ -104,6 +104,11 @@ form button{
 
 .flashes li.info {
     background-color: #17a2b8;
+}
+
+.remind{
+    margin: 0;
+    opacity: 0.5;
 }
 
 @keyframes slideIn {

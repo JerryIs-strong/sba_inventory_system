@@ -16,3 +16,5 @@
 2025-08-17 14:37:19.301282+08:00 [Guest] User "Admin" try to signin into system
 2025-08-17 14:37:26.296384+08:00 [Admin] system quit due to database integrity test fail
 2025-08-17 14:37:44.445295+08:00 [Admin] System unlocked
+2025-08-17 15:12:44.703029+08:00 [Admin] System unlocked
+2025-08-17 15:13:42.920496+08:00 [Admin] User "Admin" success to sign-in system

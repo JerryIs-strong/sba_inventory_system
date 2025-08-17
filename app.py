@@ -16,6 +16,11 @@ timezone = pytz.timezone('Asia/Hong_Kong')
 um = UserManager()
 version_info = itg.sysInfo()
 
+def loadDB():
+    global inventory
+    with open('./data/inventoryDB.json', 'r') as file:
+        inventory = json.load(file)
+
 @app.route('/', methods=['GET'])
 def home():
     from_admin = session.get("group") == "Admin"
@@ -45,9 +50,15 @@ def iManagement():
     else:
         return redirect(url_for('login'))
 
-@app.route('/iView')
+@app.route('/iView', methods=['GET', 'POST'])
 def iView():
     if session.get("username"):
+        if request.method == 'POST':
+            result = []
+            for item, quantity in inventory.items():
+                result.append([item, quantity])
+            return render_template("iView.html", inventory_data=result)
+        
         return render_template("iView.html")
     else:
         return redirect(url_for('login'))
@@ -113,7 +124,7 @@ def signup():
         else:
             flash("Require Username already exists", 'error')
         return redirect(url_for('signup'))
-    return render_template('signup.html', from_admin=from_admin)
+    return render_template('signup.html', from_admin=from_admin, version=version_info)
 
 
 #---------------
@@ -165,6 +176,6 @@ def unlock():
         print("unlock fail")
         return redirect(url_for('suspend'))
 
-
 if __name__ == "__main__":
+    loadDB()
     app.run(debug=True)

@@ -8,6 +8,29 @@
     <link rel="stylesheet" href="{{url_for('static', filename='css/commomPage.css')}}">
 </head>
 <body>
-    <h1>View Inventory \\</h1>
+    <h1>[OK]View Inventory \\</h1>
+    <form action="{{url_for('iView')}}" method="post" data-fname="Conteol Zone">
+        <button type="submit">Request data</button>
+    </form>
+    <div class="output" data-fname="Output">
+        <table>
+            <thead>
+                <tr>
+                    {% if inventory_data %}
+                        <th>Item Name</th>
+                        <th>Quantity</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in inventory_data %}
+                    <tr>
+                        <td>{{ item[0] }}</td>
+                        <td>{{ item[1] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>
