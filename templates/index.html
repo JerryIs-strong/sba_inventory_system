@@ -52,6 +52,10 @@
                 document.getElementById("mainFrame").src = button.getAttribute("data-page")
             });
         });
+
+        document.addEventListener("contextmenu", function(event) {
+            event.preventDefault();
+        });
     </script>
 </body>
 </html>

@@ -9,13 +9,36 @@
 </head>
 <body>
     <h1>Search \\</h1>
-    <form action="" method="post" data-fname="Search Engin">
+    <form action="{{url_for('search')}}" method="post" data-fname="Search Engin">
         <div class="fill_column">
             <label for="product_search">Product: </label>
             <input type="text" name="product_search" id="product_search" required>
         </div>
         <button type="submit">Submit</button>
     </form>
-    <div class="output" data-fname="Output"></div>
+    <div class="output" data-fname="Output">
+        {% if inventory_data %}
+            <table>
+                <thead>
+                    <tr>
+                        {% if inventory_data %}
+                            <th>Item Name</th>
+                            <th>Quantity</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in inventory_data %}
+                        <tr>
+                            <td>{{ item[0] }}</td>
+                            <td>{{ item[1] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% elif inventory_data == False %}
+            <h3>Not Found</h3>
+        {% endif %}
+    </div>
 </body>
 </html>

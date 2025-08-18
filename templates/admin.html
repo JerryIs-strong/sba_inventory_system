@@ -9,5 +9,90 @@
 </head>
 <body>
     <h1>Admin Panel \\</h1>
+    <form action="{{url_for('signup')}}"  method="post" onsubmit="return validateForm()" data-fname="Create Account">
+        <p class="remind">* Only administrator can create a new account with 'Admin' group</p>
+        <p class="remind">* With great power comes great responsibility</p>
+        <div class="fill_column">
+            <label for="username">Username: </label>
+            <input type="text" name="username" id="username" placeholder="User Name">
+        </div>
+        <div class="fill_column">
+            <label for="password">Password: </label>
+            <input type="password" name="password" id="password" placeholder="Password">
+        </div>
+        <div class="fill_column">
+            <label for="password_confirm">Confirm password: </label>
+            <input type="password" name="password_confirm" id="password_confirm" placeholder="Type password again">
+        </div>
+        <div class="fill_column">
+            <label for="group">User's group: </label>
+            <select name="group" id="usergroup">
+                <option value="">---Select---</option>
+                <option value="Admin">Admin</option>
+                <option value="User">User</option>
+            </select>
+        </div>
+        <button type="submit">Create an account</button>
+    </form>
+    <form action="{{url_for('deleteAcc')}}" method="post" data-fname="Remove Account"> 
+        <p class="remind">* After select an account, the passkey would show.</p>       
+        <div class="fill_column">
+            <label for="account_delection">Account: </label>
+            <select name="username" id="account_delection" required>
+                <option value="">---Select an account---</option>
+                {% for user in user_list %}
+                    <option value="{{user[0]}}">{{user[0]}}[{{user[1]}}]</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="fill_column">
+            <label for="confirm">Confirm passkey: </label>
+            <input type="text" name="confirm" id="confirm" placeholder="Please select an account" required>
+        </div>
+        <button type="submit" style="background-color: rgb(245, 104, 104);">Delete</button>
+    </form>
+    <div class="output" data-fname="Transaction Log(Today)">
+        {% if transactions %}
+            {% for transaction in transactions %}
+            <p class="sysLog">{{transaction}}</p>
+            {% endfor %}
+        {% else %}
+            <p>No Transactions</p>
+        {% endif %}
+    </div>
+    <div class="snapNoti">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{% autoescape false %}{{ message }}{% endautoescape %}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
+    <script>
+        function validateForm() {
+            const newPassword = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("password_confirm").value;
+            if (newPassword != '' && confirmPassword != ''){
+                if (newPassword == confirmPassword) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+
+        document.getElementById("account_delection").addEventListener('blur', (e) =>{
+            if (e.target.value != ''){
+                document.getElementById("confirm").placeholder = `Confirm to delete "${e.target.value}"`
+            }else{
+                document.getElementById("confirm").placeholder = 'Please select an account'
+            }
+        })
+    </script>
 </body>
 </html>

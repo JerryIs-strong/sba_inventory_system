@@ -1,6 +1,7 @@
 :root{
-    --primary-background-color: #232323;
-    --second-background-color: #3b3b3b;
+    --primary-background-color: #232323cc;
+    --second-background-color: #3b3b3bda;
+    --primary-outline: #6d6d6d;
     --font-color: #fff;
     --btn-color: rgb(56, 121, 207);
 }

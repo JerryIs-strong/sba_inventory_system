@@ -2,6 +2,9 @@
 
 *{
     box-sizing: border-box;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
 }
 
 body{
@@ -27,7 +30,6 @@ form::before,.output::before{
     color: aliceblue;
     position: absolute;
     margin-top: -42px;
-    background-color: var(--primary-background-color);
     padding: 0 5px;
 }
 
@@ -69,8 +71,8 @@ form button{
     position: fixed;
     top: 20px;
     right: 20px;
-    z-index: 9999;
-    max-width: 300px;
+    z-index: 999;
+    max-width: 350px;
 }
 
 .flashes {
@@ -109,6 +111,15 @@ form button{
 .remind{
     margin: 0;
     opacity: 0.5;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+table, td, th {
+  border: 1px solid var(--primary-outline);
+  padding: 10px 20px;
 }
 
 @keyframes slideIn {

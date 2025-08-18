@@ -44,7 +44,11 @@ class UserManager:
             cur.execute('SELECT user_name FROM users')
             user_list = cur.fetchall()
             con.commit()
-            return [username[0] for username in user_list]
+            result = []
+
+            for user in user_list:
+                result.append([user[0], self.getUserGroup(user[0])])
+            return result
         
     def deleteUser(self, user_name):
         with sqlite3.connect("data/user.db") as con:

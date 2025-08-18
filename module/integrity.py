@@ -39,14 +39,14 @@ def initLogService():
         f.write(f'LID: {lid} start\n')
     return lid
 
-def log(message, temp = False):
+def log(message, transaction = False):
     current_date = datetime.datetime.now(timezone).strftime("%d_%m_%Y")
-    with open(f"log/system_log_{current_date}.txt", "a") as f:
-        if temp:
-            f.write(f'{datetime.datetime.now(timezone)} {message}(TEMP)\n')
-        else:
-            f.write(f'{datetime.datetime.now(timezone)} {message}\n')
-
+    if transaction:
+        folder = "log/transaction"
+    else:
+        folder = "log"
+    with open(f"{folder}/log_{current_date}.txt", "a", encoding='utf-8') as f:
+        f.write(f'{datetime.datetime.now(timezone)} {message}\n')
 def endLogService(lid, save = False):
     current_date = datetime.datetime.now(timezone).strftime("%d_%m_%Y")
     log_start = None

@@ -13,14 +13,7 @@
         <form action="{{url_for('signup')}}"  method="post" onsubmit="return validateForm()">
             <input type="text" name="username" id="username" placeholder="User Name">
             <input type="password" name="password" id="password" placeholder="Password">
-            <input type="password" name="password" id="password_confirm" placeholder="Type password again">
-            {% if from_admin %}
-                <select name="group" id="usergroup">
-                    <option value="">---Select---</option>
-                    <option value="admin">Admin</option>
-                    <option value="user">User</option>
-                </select>
-            {% endif %}
+            <input type="password" name="password_confirm" id="password_confirm" placeholder="Type password again">
             <button type="submit">Submit</button>
         </form>
         <p>Already have an account? <a href="{{url_for('login')}}">Login</a></p>
@@ -36,6 +29,7 @@
             {% endif %}
         {% endwith %}
     </div>
+    <p class="version">{{version}}_via_deployment_server</p>
     <script>
         function validateForm() {
             const newPassword = document.getElementById("password").value;
@@ -50,6 +44,10 @@
                 return false;
             }
         }
+
+        document.addEventListener("contextmenu", function(event) {
+            event.preventDefault();
+        });
     </script>
 </body>
 </html>

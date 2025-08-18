@@ -10,6 +10,8 @@
 <body>
     <div class="main">
         <h1>Login</h1>
+        <p class="remind">Welcome to the inventory system with WebUI(Panel)</p>
+        <p class="remind" style="margin-bottom: 10px;">(This program should be still work with CLI version)</p>
         <form action="{{url_for('login')}}" method="post">
             <input type="text" name="username" id="username" placeholder="User Name">
             <input type="password" name="password" id="password" placeholder="Password">
@@ -28,5 +30,11 @@
             {% endif %}
         {% endwith %}
     </div>
+    <p class="version">{{version}}_via_deployment_server</p>
+    <script>
+        document.addEventListener("contextmenu", function(event) {
+            event.preventDefault();
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,11 @@
+2025-08-19 00:29:11.406121+08:00 [RP001A] New item with init quantity 0 --> 🔼0
+2025-08-19 00:30:02.706926+08:00 [We_are] Item removed from system --> 🔽100
+2025-08-19 00:30:25.445236+08:00 [HER] Item removed from system --> 🔽30
+2025-08-19 00:30:28.052591+08:00 [I_SWAY] Item removed from system --> 🔽100
+2025-08-19 00:30:29.456785+08:00 [YUQ1] Item removed from system --> 🔽100
+2025-08-19 00:30:35.750689+08:00 [BP001A] New item with init quantity 0 --> 🔼0
+2025-08-19 00:30:53.875990+08:00 [BLP001A] New item with init quantity 0 --> 🔼0
+2025-08-19 00:39:22.145597+08:00 [jerry] New item with init quantity 0 --> 🔼0
+2025-08-19 00:39:30.836117+08:00 [tom:1000] New item with init quantity 1000 --> 🔼1000
+2025-08-19 00:40:12.705854+08:00 [jerry] Goods arrival --> 🔽9999999
+2025-08-19 00:40:21.420426+08:00 [tom] Item removed from system --> 🔽1000

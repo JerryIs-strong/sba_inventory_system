@@ -9,7 +9,7 @@
 </head>
 <body>
     <h1>Inventory Management \\</h1>
-    <form action="" method="post" data-fname="Add Item">
+    <form action="{{url_for('manageInventory', type="add")}}" method="post" data-fname="Add Item">
         <div class="fill_column">
             <label for="product_add">Product: </label>
             <input type="text" name="product_add" id="product_add" required>
@@ -18,30 +18,36 @@
         <p class="remind">* use ' ' to split for batch update</p>
         <button type="submit">Add</button>
     </form>
-    <form action="" method="post" data-fname="Remove Item">
+    <form action="{{url_for('manageInventory', type="remove")}}" method="post" data-fname="Remove Item">
         <div class="fill_column">
             <label for="product_remove">Product: </label>
             <select name="product_remove" id="product_remove" required>
                 <option value="">---Select a product---</option>
+                {% for item in inventory_data %}
+                    <option value="{{item[0]}}">{{item[0]}}</option>
+                {% endfor %}
             </select>
         </div>
         <button type="submit">Remove</button>
     </form>
-    <form action="" method="post" data-fname="Modify Item Information">
+    <form action="{{url_for('manageInventory', type="update")}}" method="post" data-fname="Modify Item Information">
         <div class="fill_column">
             <label for="product_modify">Product: </label>
             <select name="product_modify" id="product_modify" required>
                 <option value="">---Select a product---</option>
+                {% for item in inventory_data %}
+                    <option value="{{item[0]}}">{{item[0]}}</option>
+                {% endfor %}
             </select>
         </div>
         <div class="fill_column">
             <label for="">Type: </label>
             <div style="margin-right: 5px;">
-                <input type="radio" name="product_modify" id="product_modify_name" value="name">
+                <input type="radio" name="product_modify_type" id="product_modify_name" value="name">
                 <label for="product_modify_name">Name</label>
             </div>
             <div>
-                <input type="radio" name="product_modify" id="product_modify_quantity" value="quantity">
+                <input type="radio" name="product_modify_type" id="product_modify_quantity" value="quantity">
                 <label for="product_modify_quantity">Quantity</label>
             </div>
         </div>
@@ -51,5 +57,16 @@
         </div>
         <button type="submit">Update</button>
     </form>
+    <div class="snapNoti">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{% autoescape false %}{{ message }}{% endautoescape %}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
 </body>
 </html>

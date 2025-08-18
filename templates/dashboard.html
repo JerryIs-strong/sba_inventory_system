@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <h1>[OK]Dashboard \\</h1>
+    <h1>Dashboard \\</h1>
     <form action="{{url_for('update_account', type=" username")}}" method="post" data-fname="Account Information">
         <div class="fill_column">
             <label for="username">User Name: </label>
@@ -31,10 +31,19 @@
             <label for="password_confirm">Confirm Password: </label>
             <input type="password" name="password_confirm" id="password_confirm" required>
         </div>
-        <p id="password_hint"></p>
         <button type="submit">Save Change</button>
-        <p style="color: rgb(255, 85, 85); margin: 0;"><a href="">Delete My Account</a></p>
+        <p style="color: rgb(255, 85, 85); margin: 0; cursor: pointer;"><a onclick='accDel("open")'>Delete My Account</a></p>
     </form>
+    <div class="popConfirm" id="popConfirm" style="background-color: #3a3a3abe; width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; justify-content: center; align-items: center; backdrop-filter: blur(10px);">
+        <form action="{{url_for('deleteAcc', type=" password")}}" method="post" data-fname="Account Security" id="AcSecureForm" style="border: 1px solid #656565;">
+            <div class="close" onclick='accDel("close")' style="width: fit-content; position: absolute; top: 10px; right: 20px; cursor: pointer;">X</div>
+            <div class="fill_column">
+                <label for="confirm">Confirm passkey: </label>
+                <input type="text" name="confirm" id="confirm" placeholder="Please select an account" required>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
     <div class="snapNoti">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -69,6 +78,15 @@
                 }, 5000);
             });
         });
+        function accDel(action){
+            popConfirm = document.getElementById("popConfirm")
+            if (action == "open"){
+                popConfirm.style.display = "flex";
+                document.getElementById("confirm").placeholder = `Confirm to delete "{{username}}"`
+            }else{
+                popConfirm.style.display = "none";
+            }
+        }
     </script>
 </body>
 </html>
