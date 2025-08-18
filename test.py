@@ -1,6 +1,7 @@
 from module.userManagement import UserManager
+import module.integrity as itg
 
 um=UserManager()
 
-um.getUserList()
+print(itg.sysInfo())
 

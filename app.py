@@ -14,7 +14,8 @@ app.secret_key = 'super_inventorrrrrry_system'
 inventory = {}
 timezone = pytz.timezone('Asia/Hong_Kong')
 um = UserManager()
-version_info = itg.sysInfo()
+sys_version, p_version = itg.sysInfo()
+from_admin = False
 
 def loadDB():
     global inventory
@@ -29,14 +30,15 @@ def getItems():
 
 @app.route('/', methods=['GET'])
 def home():
+    global from_admin
     from_admin = session.get("group") == "Admin"
     if itg.verifyMD5():
         if session.get("username"):  
             if 'page' in request.args:
                 page = request.args['page']
-                return render_template("index.html", version=version_info, username=session["username"], from_admin=from_admin, re_dir=page)
+                return render_template("index.html", version=sys_version, p_version=p_version, username=session["username"], from_admin=from_admin, re_dir=page)
             else:
-                return render_template("index.html", version=version_info, username=session["username"], from_admin=from_admin)
+                return render_template("index.html", version=sys_version, p_version=p_version, username=session["username"], from_admin=from_admin)
         else:
             return redirect(url_for('login'))
     else:
@@ -45,7 +47,8 @@ def home():
 @app.route('/dashboard')
 def dashboard():
     if session.get("username"):
-        return render_template("dashboard.html", username=session['username'])
+        print(from_admin)
+        return render_template("dashboard.html", username=session['username'], from_admin=from_admin)
     else:
         return redirect(url_for('login'))
 
@@ -132,11 +135,10 @@ def login():
             itg.log(f'[Guest] User "{username}" try to signin into system')
             flash('Username/Password incorrect. Please try again', 'error')
         return redirect(url_for('login'))
-    return render_template('login.html', version=version_info)
+    return render_template('login.html', version=sys_version)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    from_admin = session.get("group") == "Admin"
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -158,7 +160,7 @@ def signup():
             return redirect(url_for('admin'))
         else:
             return redirect(url_for('login'))
-    return render_template('signup.html', from_admin=from_admin, version=version_info)
+    return render_template('signup.html', from_admin=from_admin, version=sys_version)
 
 
 #---------------
@@ -242,7 +244,6 @@ def manageInventory(type):
 
 @app.route('/api/account/delete', methods=['POST'])
 def deleteAcc():
-    from_admin = session.get("group") == "Admin"
     if from_admin:
         username = request.form.get('username')
     else:

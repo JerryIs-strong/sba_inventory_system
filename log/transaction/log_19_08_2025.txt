@@ -9,3 +9,4 @@
 2025-08-19 00:39:30.836117+08:00 [tom:1000] New item with init quantity 1000 --> 🔼1000
 2025-08-19 00:40:12.705854+08:00 [jerry] Goods arrival --> 🔽9999999
 2025-08-19 00:40:21.420426+08:00 [tom] Item removed from system --> 🔽1000
+2025-08-19 01:26:17.416954+08:00 [jerry] Item removed from system --> 🔽9999999
