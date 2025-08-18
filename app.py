@@ -93,7 +93,7 @@ def export():
         if request.method == 'POST':
             try:
                 df = pd.DataFrame(list(inventory.items()), columns=['Item_name', 'Quantity'])
-                current_date = datetime.datetime.now(timezone).strftime("%d_%m_%Y")
+                current_date = datetime.datetime.now(timezone).strftime("%Y_%m_%d")
                 file_name = f'exported_data_{current_date}.csv'
                 file_path = os.path.join('exports', file_name)
                 df.to_csv(file_path, index=False)
@@ -113,7 +113,7 @@ def admin():
         if session.get("group") != "Admin":
             return(redirect(url_for('/')))
         else:
-            current_date = datetime.datetime.now(timezone).strftime("%d_%m_%Y")
+            current_date = datetime.datetime.now(timezone).strftime("%Y_%m_%d")
             with open(f'log/transaction/log_{current_date}.txt', 'r', encoding='utf-8') as f:
                 transactions = f.readlines()
                 transactions.reverse()
