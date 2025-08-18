@@ -41,7 +41,9 @@
             <select name="username" id="account_delection" required>
                 <option value="">---Select an account---</option>
                 {% for user in user_list %}
+                    {% if user[0] != "Admin"%}
                     <option value="{{user[0]}}">{{user[0]}}[{{user[1]}}]</option>
+                    {% endif %}
                 {% endfor %}
             </select>
         </div>
@@ -51,6 +53,15 @@
         </div>
         <button type="submit" style="background-color: rgb(245, 104, 104);">Delete</button>
     </form>
+    <div class="output" data-fname="System Log(Today)">
+        {% if syslog %}
+            {% for activity in syslog %}
+            <p class="sysLog">{{activity}}</p>
+            {% endfor %}
+        {% else %}
+            <p>No Transactions</p>
+        {% endif %}
+    </div>
     <div class="output" data-fname="Transaction Log(Today)">
         {% if transactions %}
             {% for transaction in transactions %}

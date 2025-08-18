@@ -117,7 +117,10 @@ def admin():
             with open(f'log/transaction/log_{current_date}.txt', 'r', encoding='utf-8') as f:
                 transactions = f.readlines()
                 transactions.reverse()
-            return render_template("admin.html", user_list=um.getUserList(), transactions=transactions)
+            with open(f'log/system_log_{current_date}.txt', 'r', encoding='utf-8') as f:
+                syslog = f.readlines()
+                syslog.reverse()
+            return render_template("admin.html", user_list=um.getUserList(), transactions=transactions, syslog=syslog)
     else:
         return redirect(url_for('login'))
     
