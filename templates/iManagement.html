@@ -11,11 +11,21 @@
     <h1>Inventory Management \\</h1>
     <form action="{{url_for('manageInventory', type="add")}}" method="post" data-fname="Add Item">
         <div class="fill_column">
-            <label for="product_add">Product: </label>
-            <input type="text" name="product_add" id="product_add" required>
+            <label for="product_code">Product ID: </label>
+            <input type="text" name="product_code" id="product_code" required>
         </div>
-        <p class="remind">* type item_name:quantity for adding item and quantity</p>
-        <p class="remind">* use ' ' to split for batch update</p>
+        <div class="fill_column">
+            <label for="product_name">Product Name: </label>
+            <input type="text" name="product_name" id="product_name" required>
+        </div>
+        <div class="fill_column">
+            <label for="product_quantity">Quantity: </label>
+            <input type="text" name="product_quantity" id="product_quantity" required>
+        </div>
+        <div class="fill_column">
+            <label for="product_price">Price(HKD): </label>
+            <input type="text" name="product_price" id="product_price" required>
+        </div>
         <button type="submit">Add</button>
     </form>
     <form action="{{url_for('manageInventory', type="remove")}}" method="post" data-fname="Remove Item">
@@ -32,8 +42,8 @@
     </form>
     <form action="{{url_for('manageInventory', type="update")}}" method="post" data-fname="Modify Item Information">
         <div class="fill_column">
-            <label for="product_modify">Product: </label>
-            <select name="product_modify" id="product_modify" required>
+            <label for="product_code">Product: </label>
+            <select name="product_code" id="product_code" required>
                 <option value="">---Select a product---</option>
                 {% for item in inventory_data %}
                     <option value="{{item[0]}}">{{item[0]}}</option>
@@ -43,17 +53,21 @@
         <div class="fill_column">
             <label for="">Type: </label>
             <div style="margin-right: 5px;">
-                <input type="radio" name="product_modify_type" id="product_modify_name" value="name">
-                <label for="product_modify_name">Name</label>
+                <input type="radio" name="product_type" value="name">
+                <label for="product_name">Name</label>
             </div>
             <div>
-                <input type="radio" name="product_modify_type" id="product_modify_quantity" value="quantity">
-                <label for="product_modify_quantity">Quantity</label>
+                <input type="radio" name="product_type" value="quantity">
+                <label for="product_quantity">Quantity</label>
+            </div>
+            <div>
+                <input type="radio" name="product_type" value="price">
+                <label for="product_price">Price</label>
             </div>
         </div>
         <div class="fill_column">
-            <label for="product_modify_data">Name/Quantity: </label>
-            <input type="text" name="product_modify_data" id="product_modify_data" required>
+            <label for="product_data">Update: </label>
+            <input type="text" name="product_data" id="product_data" required>
         </div>
         <button type="submit">Update</button>
     </form>

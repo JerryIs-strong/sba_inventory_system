@@ -24,8 +24,8 @@ def loadDB():
 
 def getItems():
     result = []
-    for item, quantity in inventory.items():
-        result.append([item, quantity])
+    for item_code, item_detail in inventory.items():
+        result.append([item_code, item_detail["name"], item_detail["quantity"], item_detail["price"]])
     return result
 
 @app.route('/', methods=['GET'])
@@ -74,9 +74,13 @@ def iView():
 def search():
     if session.get("username"):
         if request.method == 'POST':
-            item_name = request.form['product_search']
+            item_target = request.form['product_search'].lower()
             total_inventory = getItems()
-            result = [item for item in total_inventory if item_name.lower() == item[0].lower()]
+            result = []
+
+            for item in total_inventory:
+                if item_target in item[0].lower() or item_target in item[1].lower():
+                    result.append(item)
 
             if result:
                 return render_template("search.html", inventory_data=result)
@@ -92,7 +96,7 @@ def export():
     if session.get("username"):
         if request.method == 'POST':
             try:
-                df = pd.DataFrame(list(inventory.items()), columns=['Item_name', 'Quantity'])
+                df = pd.DataFrame([ {"Product Code": code, "Product Name": item["name"], "Quantity": item["quantity"]} for code, item in inventory.items() ])
                 current_date = datetime.datetime.now(timezone).strftime("%Y_%m_%d")
                 file_name = f'exported_data_{current_date}.csv'
                 file_path = os.path.join('exports', file_name)
@@ -114,12 +118,18 @@ def admin():
             return(redirect(url_for('/')))
         else:
             current_date = datetime.datetime.now(timezone).strftime("%Y_%m_%d")
-            with open(f'log/transaction/log_{current_date}.txt', 'r', encoding='utf-8') as f:
-                transactions = f.readlines()
-                transactions.reverse()
-            with open(f'log/system_log_{current_date}.txt', 'r', encoding='utf-8') as f:
-                syslog = f.readlines()
-                syslog.reverse()
+            if os.path.exists(f'log/transaction/log_{current_date}.txt'):
+                with open(f'log/transaction/log_{current_date}.txt', 'r', encoding='utf-8') as f:
+                    transactions = f.readlines()
+                    transactions.reverse()
+            else:
+                transactions = False
+            if os.path.exists(f'log/system_log_{current_date}.txt'):
+                with open(f'log/system_log_{current_date}.txt', 'r', encoding='utf-8') as f:
+                    syslog = f.readlines()
+                    syslog.reverse()
+            else:
+                syslog = False
             return render_template("admin.html", user_list=um.getUserList(), transactions=transactions, syslog=syslog)
     else:
         return redirect(url_for('login'))
@@ -197,48 +207,45 @@ def update_account(type):
 @app.route('/api/inventory/<type>', methods=['POST'])
 def manageInventory(type):
     if type == "add":
-        item = request.form.get("product_add")
-        items = item.split()
-        for i in range(len(items)):
-            if ':' in items[i]:
-                item_name, quantity = items[i].split(':')
-                if item_name in inventory:
-                    flash("Item already exit", 'error')
-                else:
-                    inventory[item_name] = int(quantity)
-                    flash(f"Added item {item} with quantity {quantity}", 'info')
-                    itg.log(f"[{item}] New item with init quantity {quantity} --> 🔼{quantity}", True)
-            else:
-                if items[i] in inventory:
-                    flash("Item already exit", 'error')
-                else:
-                    inventory[items[i]] = 0
-                    flash(f"Added item {item} with quantity 0", 'info')
-                    itg.log(f"[{item}] New item with init quantity 0 --> 🔼0", True)
+        code = request.form.get("product_code")
+        name = request.form.get("product_name")
+        quantity = request.form.get("product_quantity")
+        price = request.form.get("product_price")
+        inventory[code] = {
+            "name": name,
+            "quantity": int(quantity),
+            "price": int(price)
+        }
+        flash(f"Added item {code} with quantity {quantity} amd price ${price}", 'info')
+        itg.log(f"[{code}] New item with init quantity {quantity} --> 🔼{quantity}", True)
     elif type == "remove":
-        item = request.form.get("product_remove")
-        init_quantity = inventory[item]
-        del inventory[item]
-        itg.log(f"[{item}] Item removed from system --> 🔽{init_quantity}", True)
-        flash(f'Success to delete item "{item}"', 'success')
+        code = request.form.get("product_remove")
+        init_quantity = inventory[code]
+        del inventory[code]
+        itg.log(f"[{code}] Item removed from system --> 🔽{init_quantity}", True)
+        flash(f'Success to delete item "{code}"', 'success')
     elif type == "update":
-        item = request.form.get("product_modify")
-        modify_type = request.form.get("product_modify_type")
-        modify_data = request.form.get("product_modify_data")
+        code = request.form.get("product_code")
+        modify_type = request.form.get("product_type")
+        modify_data = request.form.get("product_data")
         if modify_type == "name":
-            new_name = modify_data
-            inventory[new_name] = inventory.pop(item)
-            flash(f"Updated the name of {item} to {new_name}", 'info')
-            itg.log(f"[{new_name}] {item} now is {new_name} --> 🟡 maintain", True)
+            inventory[modify_data] = {
+                "name": modify_data,
+                "quantity": inventory[code]['quantity']
+            }
+            flash(f"Updated the name of {code} to {modify_data}", 'info')
+            itg.log(f"[{code}] {code} now is {modify_data} --> 🟡 maintain", True)
         elif modify_type == "quantity":
-            new_quantity = int(modify_data)
-            init_quantity = inventory[item]
-            inventory[item] = new_quantity
-            if (init_quantity - new_quantity) > 0:
-                itg.log(f"[{item}] Goods have been sold --> 🔽{init_quantity - new_quantity}", True)
+            init_quantity = inventory[code]["quantity"]
+            inventory[code]["quantity"] = int(modify_data)
+            if (init_quantity - int(modify_data)) > 0:
+                itg.log(f"[{code}] Goods have been sold --> 🔽{init_quantity - int(modify_data)}", True)
             else:
-                itg.log(f"[{item}] Goods arrival --> 🔼{new_quantity - init_quantity}", True)
-            flash(f"Updated the quantity of {item} to {new_quantity}", 'info')
+                itg.log(f"[{code}] Goods arrival --> 🔼{int(modify_data) - init_quantity}", True)
+            flash(f"Updated the quantity of {code} to {int(modify_data)}", 'info')
+        elif modify_type == "price":
+            inventory[code]["price"] = int(modify_data)
+            flash(f"Updated the quantity of {code} to {int(modify_data)}", 'info')
     with open('./data/inventoryDB.json', 'w') as file:
         json.dump(inventory, file)
     itg.writeMD5()

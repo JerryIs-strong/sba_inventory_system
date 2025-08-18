@@ -34,14 +34,14 @@ def verifyMD5():
         return False
     
 def initLogService():
-    current_date = datetime.datetime.now(timezone).strftime("%d_%m_%Y")
+    current_date = datetime.datetime.now(timezone).strftime("%Y_%m_%d")
     lid = datetime.datetime.now(timezone).strftime("%Y%m%d%H%M%S")
     with open(f"log/system_log_{current_date}.txt", "a") as f:
         f.write(f'LID: {lid} start\n')
     return lid
 
 def log(message, transaction = False):
-    current_date = datetime.datetime.now(timezone).strftime("%d_%m_%Y")
+    current_date = datetime.datetime.now(timezone).strftime("%Y_%m_%d")
     if transaction:
         folder = "log/transaction"
         file_name = f"log_{current_date}.txt"
@@ -52,7 +52,7 @@ def log(message, transaction = False):
         f.write(f'{datetime.datetime.now(timezone)} {message}\n')
 
 def endLogService(lid, save = False):
-    current_date = datetime.datetime.now(timezone).strftime("%d_%m_%Y")
+    current_date = datetime.datetime.now(timezone).strftime("%Y_%m_%d")
     log_start = None
     log_end = None
 

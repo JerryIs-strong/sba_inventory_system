@@ -10,3 +10,11 @@
 2025-08-19 00:40:12.705854+08:00 [jerry] Goods arrival --> 🔽9999999
 2025-08-19 00:40:21.420426+08:00 [tom] Item removed from system --> 🔽1000
 2025-08-19 01:26:17.416954+08:00 [jerry] Item removed from system --> 🔽9999999
+2025-08-19 03:06:53.796562+08:00 [pen001a] New item with init quantity 0 --> 🔼0
+2025-08-19 03:07:22.347728+08:00 [pen001b] New item with init quantity 0 --> 🔼0
+2025-08-19 03:07:42.308162+08:00 [pen001a] Item removed from system --> 🔽{'name': 'Pen0.1', 'quantity': 0}
+2025-08-19 03:07:45.170448+08:00 [pen001b] Item removed from system --> 🔽{'name': '"Pen', 'quantity': 0}
+2025-08-19 03:12:24.797834+08:00 [RP001A] Goods arrival --> 🔼20
+2025-08-19 03:12:35.047191+08:00 [BLP001A] Goods arrival --> 🔼30
+2025-08-19 03:12:44.571727+08:00 [BP001A] Goods arrival --> 🔼80
+2025-08-19 03:17:27.436893+08:00 [Red Juice Pen 0.4] RP001A now is Red Juice Pen 0.4 --> 🟡 maintain
