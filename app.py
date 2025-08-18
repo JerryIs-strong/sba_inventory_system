@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session, redirect, render_template, url_for, flash, abort, send_file
+from flask import Flask, request, session, redirect, render_template, url_for, flash, abort, send_file
 import json, os
 import pandas as pd
 from datetime import datetime
