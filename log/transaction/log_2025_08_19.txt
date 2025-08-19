@@ -1,12 +1,2 @@
-2025-08-19 03:20:08.476762+08:00 [RP001A] Goods arrival --> 🔼40
-2025-08-19 03:26:22.227602+08:00 [bps0700R] New item with init quantity 0 --> 🔼0
-2025-08-19 03:30:27.380520+08:00 [bps0007R] New item with init quantity 0 --> 🔼0
-2025-08-19 03:31:03.641559+08:00 [bps0007B] New item with init quantity 0 --> 🔼0
-2025-08-19 03:31:24.019358+08:00 [bps0007BL] New item with init quantity 0 --> 🔼0
-2025-08-19 03:31:41.735603+08:00 [bps0007G] New item with init quantity 0 --> 🔼0
-2025-08-19 03:31:55.314182+08:00 [bps0007P] New item with init quantity 0 --> 🔼0
-2025-08-19 03:32:22.627007+08:00 [bps0007PP] New item with init quantity 0 --> 🔼0
-2025-08-19 03:47:11.793835+08:00 [jup001003] New item with init quantity 0 --> 🔼0
-2025-08-19 03:54:24.218363+08:00 [jup001003] Goods arrival --> 🔼50
-2025-08-19 03:54:59.923715+08:00 [test] New item with init quantity 0 --> 🔼0
-2025-08-19 03:55:07.642949+08:00 [test] Item removed from system --> 🔽{'name': 'test', 'quantity': 0, 'price': 0}
+2025-08-19 15:01:36.552261+08:00 [BP001A] 🟡Blue Juice Pen 0.5 🟡80 🔽$1 --> $10
+2025-08-19 15:01:42.298179+08:00 [BLP001A] 🟡Black Juice Pen 0.5 🟡30 🔽$1 --> $10

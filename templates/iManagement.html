@@ -53,7 +53,7 @@
         <div class="fill_column">
             <label for="">Type: </label>
             <div style="margin-right: 5px;">
-                <input type="radio" name="product_type" value="name">
+                <input type="radio" name="product_type" value="name" checked>
                 <label for="product_name">Name</label>
             </div>
             <div>
@@ -66,7 +66,7 @@
             </div>
         </div>
         <div class="fill_column">
-            <label for="product_data">Update: </label>
+            <label for="product_data" id="product_data_lable" style="text-transform: capitalize;">Name: </label>
             <input type="text" name="product_data" id="product_data" required>
         </div>
         <button type="submit">Update</button>
@@ -82,5 +82,14 @@
             {% endif %}
         {% endwith %}
     </div>
+    <script>
+        const radioInputs = document.querySelectorAll('input[type="radio"]');
+
+        radioInputs.forEach(input => {
+            input.addEventListener('change', (e) => {
+                document.getElementById("product_data_lable").innerText = `${e.target.value}: `
+            });
+        });
+    </script>
 </body>
 </html>

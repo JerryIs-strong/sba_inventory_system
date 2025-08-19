@@ -48,8 +48,16 @@ nav{
     cursor: pointer;
 }
 
+.toolbtn:hover{
+    background-color: var(--btn-hover-color);
+}
+
 .active{
     background-image: linear-gradient(129deg, #dbb1d4, #9781e4, #7190f3);
+}
+
+.active:hover{
+    background-image: linear-gradient(129deg, #ddb5d6, #8b78d1, #657fd3);
 }
 
 iframe{
@@ -59,9 +67,12 @@ iframe{
 
 .signout{
     background-image: linear-gradient(129deg, #e4cdcd,#f37171);
-    border-left: 10px solid rgb(250, 86, 86);
     margin-top: auto; 
     color: var(--font-color) !important;
+}
+
+.signout:hover{
+    background-image: linear-gradient(129deg, #ddc5c5,#df7171);
 }
 
 a{
