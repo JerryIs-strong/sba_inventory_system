@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Kings&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kings&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Mynerve&display=swap');
 
 *{
     box-sizing: border-box;
@@ -25,6 +25,19 @@ h3{
     font-family: "Kings", cursive;
     margin: 0;
     font-size: 35px;
+    display: flex;
+    align-items: center;
+}
+
+.brand{
+    font-family: "Noto Sans", sans-serif;
+    font-size: 12px;
+    background-color: #fff;
+    color: #337eee;
+    width: fit-content;
+    padding: 3px 10px;
+    margin-right: 10px;
+    font-family: "Mynerve", cursive;
 }
 
 nav{
