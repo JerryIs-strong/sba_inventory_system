@@ -8,17 +8,11 @@
     <link rel="stylesheet" href="{{url_for('static', filename='css/commomPage.css')}}">
 </head>
 <body>
-    <h1>Export Data</h1>
-    <form action="{{url_for('export')}}" method="post" data-fname="Conteol Zone">
-        <p class="remind">* When you request and export the data, it is saved in this system, but you can also download the data to your computer if you want to refer to it</p>
-        <p class="remind">* Only one data can be exported per day, otherwise the system will automatically replace the exported data with the updated version</p>
-        <button type="submit">Request to export</button>
-    </form>
-    <div class="output" data-fname="Files Manager">
-        <p>export/</p>
-        {% for data in exportData %}
-        <a href="{{url_for('downloadAttch', file_name=data)}}"><p style="margin-left: 10px;">|__ {{data}}</p></a>
-        {% endfor %}
+    <h1>Statistic</h1>
+    <div class="main">
+        {% if inventory_distribution %}
+        <img src="{{inventory_distribution}}" alt="" class="img_stat">
+        {% endif %}
     </div>
     <div class="snapNoti">
         {% with messages = get_flashed_messages(with_categories=true) %}

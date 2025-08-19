@@ -4,18 +4,22 @@ import pandas as pd
 from datetime import datetime
 import pytz
 import datetime
-
+import matplotlib.pyplot as plt
+import io
+import base64
+import matplotlib
 import module.integrity as itg
 from module.userManagement import UserManager
 
 app = Flask(__name__)
-app.secret_key = 'super_inventorrrrrry_system'
+app.secret_key = 'super_inventory_system'
 
 inventory = {}
 timezone = pytz.timezone('Asia/Hong_Kong')
 um = UserManager()
 sys_version, p_version = itg.sysInfo()
 from_admin = False
+matplotlib.use('Agg')
 
 def loadDB():
     global inventory
@@ -111,6 +115,68 @@ def export():
     else:
         return redirect(url_for('login'))
     
+@app.route('/statistic')
+def statistic():
+    if session.get("username"):
+        inventory_data = {
+            'Product Code': [],
+            'Product Name': [],
+            'Quantity': [],
+            'Price': []
+        }
+        
+        for product in getItems():  # Replace with your actual function to get items
+            inventory_data['Product Code'].append(product[0])
+            inventory_data['Product Name'].append(product[1])
+            inventory_data['Quantity'].append(product[2])
+            inventory_data['Price'].append(product[3])
+
+        df = pd.DataFrame(inventory_data)
+
+        # Filter out products with zero quantity
+        df = df[df['Quantity'] > 0]
+
+        # Generate Pie Chart if there are products to display
+        if not df.empty:
+            plt.figure(figsize=(8, 8))  # Increase figure size for better visibility
+            
+            # Generate colors using a colormap
+            colors = plt.cm.tab20.colors
+            
+            # Create pie chart with product names as labels
+            wedges, texts, autotexts = plt.pie(
+                df['Quantity'], 
+                labels=df['Product Code'],  # Include product names as labels
+                autopct='%1.1f%%', 
+                startangle=90,
+                colors=colors
+            )
+            plt.title('Distribution of Inventory', size=20, weight="bold", color="white")
+            plt.ylabel('')  # Hide y-label for pie charts
+
+            # Adjust text properties for better visibility
+            plt.setp(autotexts, size=12, weight="bold", color="black", 
+                     bbox=dict(facecolor='white', edgecolor='none', boxstyle='round,pad=0.3'))  # Add background box
+            plt.setp(texts, size=12, color="white")  # Adjust label text size and color
+            
+            plt.tight_layout()  # Automatically adjust subplot parameters to give specified padding
+
+            # Ensure the static directory exists
+            static_dir = 'static/stat/pie/'
+            os.makedirs(static_dir, exist_ok=True)
+            img_path = os.path.join(static_dir, 'pie_chart.png')
+
+            # Save with a transparent background
+            plt.savefig(img_path, facecolor='#3b3b3bda')
+            plt.close()  # Close the plot to free memory
+
+            return render_template('statistic.html', inventory_distribution=img_path)
+        else:
+            # Handle case where there are no products to display
+            return render_template('statistic.html', inventory_distribution=None)
+    else:
+        return redirect(url_for('login'))
+
 @app.route('/admin')
 def admin():
     if session.get("username"):
@@ -222,7 +288,7 @@ def manageInventory(type):
         code = request.form.get("product_remove")
         name = inventory[code]['name']
         del inventory[code]
-        itg.log(f"[{code}] ❌{name} ❌0 ❌$0", True)
+        itg.log(f"[{code}] ❌{name}", True)
         flash(f'Success to delete item "{code}"', 'success')
     elif type == "update":
         code = request.form.get("product_code")
