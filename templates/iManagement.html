@@ -20,11 +20,11 @@
         </div>
         <div class="fill_column">
             <label for="product_quantity">Quantity: </label>
-            <input type="text" name="product_quantity" id="product_quantity" required>
+            <input type="number" name="product_quantity" id="product_quantity" required>
         </div>
         <div class="fill_column">
             <label for="product_price">Price(HKD): </label>
-            <input type="text" name="product_price" id="product_price" required>
+            <input type="number" name="product_price" id="product_price" required>
         </div>
         <button type="submit">Add</button>
     </form>
@@ -88,6 +88,11 @@
         radioInputs.forEach(input => {
             input.addEventListener('change', (e) => {
                 document.getElementById("product_data_lable").innerText = `${e.target.value}: `
+                if (e.target.value == "quantity" || e.target.value == "price"){
+                    document.getElementById("product_data").type = "number"
+                }else{
+                    document.getElementById("product_data").type = "text"
+                }
             });
         });
     </script>

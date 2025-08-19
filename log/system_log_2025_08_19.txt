@@ -3,3 +3,5 @@
 2025-08-19 03:40:57.414816+08:00 [Admin] User "Admin" success to sign-in system
 2025-08-19 03:55:34.048936+08:00 [Admin] Inventory exported
 2025-08-19 14:58:15.949571+08:00 [Admin] User "Admin" success to sign-in system
+2025-08-19 15:40:52.449337+08:00 [i-show-speed] User "i-show-speed" success to sign-in system
+2025-08-19 15:41:13.831088+08:00 [i-show-speed] User "i-show-speed" success to sign-in system

@@ -220,6 +220,7 @@ def manageInventory(type):
         itg.log(f"[{code}] ⭕{name} 🔼{quantity} 🔼${price}", True)
     elif type == "remove":
         code = request.form.get("product_remove")
+        name = inventory[code]['name']
         del inventory[code]
         itg.log(f"[{code}] ❌{name} ❌0 ❌$0", True)
         flash(f'Success to delete item "{code}"', 'success')
@@ -234,7 +235,6 @@ def manageInventory(type):
                 "price": inventory[code]['price']
             }
             flash(f"Updated the name of {code} to {modify_data}", 'info')
-            itg.log(f"[{code}] {inventory[code]['name']} now is {modify_data} --> 🟡 maintain", True)
             itg.log(f"[{code}] ⭕{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🟡{inventory[code]['price']}", True)
         elif modify_type == "quantity":
             init_quantity = inventory[code]["quantity"]
