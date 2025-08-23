@@ -1,0 +1,15 @@
+2025-08-24 01:28:09.002746+08:00 [jup001003] ⭕100 🟡50 🟡170
+2025-08-24 01:29:06.535654+08:00 [jup001003] ⭕Pilot Juice Up Gel Pen 10-Color Set (0.3mm) 🟡50 🟡170
+2025-08-24 01:29:13.908264+08:00 [jup001003] 🟡Pilot Juice Up Gel Pen 10-Color Set (0.3mm) 🔼50 --> 100 🟡170
+2025-08-24 01:29:42.657244+08:00 [BLP001A] 🟡Black Juice Pen 0.5 🔼70 --> 100 🟡10
+2025-08-24 01:30:09.408987+08:00 [bps0007B] 🟡Pilot BP-S Fine Ballpoint Blue (0.7mm) 🔼100 --> 100 🟡6
+2025-08-24 01:30:14.857880+08:00 [bps0007BL] ⭕100 🟡0 🟡6
+2025-08-24 01:30:22.124316+08:00 [bps0007G] 🟡Pilot BP-S Fine Ballpoint Pens Green (0.7mm) 🔼100 --> 100 🟡6
+2025-08-24 01:30:27.975240+08:00 [bps0007P] 🟡Pilot BP-S Fine Ballpoint Pens Pink (0.7mm) 🔼100 --> 100 🟡6
+2025-08-24 01:30:34.774038+08:00 [bps0007PP] 🟡Pilot BP-S Fine Ballpoint Pens Purple (0.7mm) 🔼100 --> 100 🟡6
+2025-08-24 01:31:10.508803+08:00 [bps0007BL] ⭕Pilot BP-S Fine Ballpoint Pens Black (0.7mm) 🟡0 🟡6
+2025-08-24 01:31:16.408765+08:00 [bps0007BL] 🟡Pilot BP-S Fine Ballpoint Pens Black (0.7mm) 🔼100 --> 100 🟡6
+2025-08-24 01:32:48.972911+08:00 [bps0007BL] 🟡Pilot BP-S Fine Ballpoint Pens Black (0.7mm) 🔽99 --> 1 🟡6
+2025-08-24 01:33:32.125498+08:00 [bps0007BL] 🟡Pilot BP-S Fine Ballpoint Pens Black (0.7mm) 🔼99 --> 100 🟡6
+2025-08-24 01:36:00.654240+08:00 [BLP001A] 🟡Black Juice Pen 0.5 🔽99 --> 1 🟡10
+2025-08-24 01:37:00.757490+08:00 [BLP001A] 🟡Black Juice Pen 0.5 🔼99 --> 100 🟡10

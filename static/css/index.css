@@ -1,13 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Kings&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Mynerve&display=swap');
 
-*{
+* {
     box-sizing: border-box;
     user-select: none;
     -moz-user-select: none;
     -webkit-user-drag: none;
 }
 
-body{
+body {
     font-family: "Noto Sans", sans-serif;
     background-image: url(../wallhaven-p2v1vp.jpg);
     background-position: center;
@@ -21,7 +21,7 @@ body{
     flex-direction: column;
 }
 
-h3{
+h3 {
     font-family: "Kings", cursive;
     margin: 0;
     font-size: 35px;
@@ -29,7 +29,7 @@ h3{
     align-items: center;
 }
 
-.brand{
+.brand {
     font-family: "Noto Sans", sans-serif;
     font-size: 12px;
     background-color: #fff;
@@ -40,14 +40,17 @@ h3{
     font-family: "Mynerve", cursive;
 }
 
-nav{
+nav {
     background-color: var(--second-background-color);
     height: fit-content;
     width: 100%;
     padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
-.sidebar{
+.sidebar {
     height: 100%;
     width: fit-content;
     background-color: var(--second-background-color);
@@ -55,48 +58,135 @@ nav{
     flex-direction: column;
 }
 
-.toolbtn, .toolbtnX{
+.toolbtn,
+.toolbtnX {
     padding: 20px;
     font-family: "Noto Sans", sans-serif;
     cursor: pointer;
+    position: relative;
+    overflow: hidden;
 }
 
-.toolbtn:hover{
+.signout{
+    margin-right: 20px; 
+    cursor: pointer;
+    color: var(--font-color);
+}
+
+.toolbtn:hover {
     background-color: var(--btn-hover-color);
 }
 
-.active{
+.active {
     background-image: linear-gradient(129deg, #dbb1d4, #9781e4, #7190f3);
 }
 
-.active:hover{
+.active:hover {
     background-image: linear-gradient(129deg, #ddb5d6, #8b78d1, #657fd3);
 }
 
-iframe{
+iframe {
     width: calc(100% - 218px);
     height: 100%;
 }
 
-.signout{
-    background-image: linear-gradient(129deg, #e4cdcd,#f37171);
-    margin-top: auto; 
-    color: var(--font-color) !important;
-}
-
-.signout:hover{
-    background-image: linear-gradient(129deg, #ddc5c5,#df7171);
-}
-
-a{
+a {
     text-decoration: none;
 }
 
-.signout:visited{
+.signout:visited {
     color: var(--font-color) !important;
 }
 
-.main{
+.main {
     display: flex;
     flex: 1 2 auto;
+}
+
+.toolbtn:focus {
+    outline: none;
+}
+
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+    transform: scale(0);
+    animation: ripple-animation 0.6s linear;
+    pointer-events: none;
+}
+
+.snapNoti {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 999;
+    max-width: 350px;
+}
+
+.flashes {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.flashes li {
+    background-color: #333;
+    color: white;
+    padding: 15px;
+    margin: 5px 0;
+    border-radius: 5px;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: slideIn 0.5s forwards, fadeOut 0.5s forwards 3s;
+}
+
+.flashes li.success {
+    background-color: #28a745;
+}
+
+.flashes li.error {
+    background-color: #dc3545;
+}
+
+.flashes li.warning {
+    background-color: #ffc107;
+}
+
+.flashes li.info {
+    background-color: #17a2b8;
+}
+
+.inventoryAlert{
+    background-color: #dd4c5b;
+}
+
+@keyframes ripple-animation {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}
+
+@keyframes scroll {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
 }

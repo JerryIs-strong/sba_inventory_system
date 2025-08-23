@@ -41,8 +41,19 @@
                 </tbody>
             </table>
         {% elif inventory_data == False %}
-            <h3>Not Found</h3>
+            <h3 style="opacity: 0.6;">Σ(｀L_｀ ) N/A~~~</h3>
         {% endif %}
+    </div>
+    <div class="snapNoti">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{% autoescape false %}{{ message }}{% endautoescape %}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
     </div>
 </body>
 </html>

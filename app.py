@@ -1,13 +1,9 @@
-from flask import Flask, request, session, redirect, render_template, url_for, flash, abort, send_file
+from flask import Flask, request, session, redirect, render_template, url_for, flash, abort, send_file, jsonify
 import json, os
 import pandas as pd
 from datetime import datetime
 import pytz
 import datetime
-import matplotlib.pyplot as plt
-import io
-import base64
-import matplotlib
 import module.integrity as itg
 from module.userManagement import UserManager
 
@@ -19,7 +15,6 @@ timezone = pytz.timezone('Asia/Hong_Kong')
 um = UserManager()
 sys_version, p_version = itg.sysInfo()
 from_admin = False
-matplotlib.use('Agg')
 
 def loadDB():
     global inventory
@@ -63,14 +58,10 @@ def iManagement():
     else:
         return redirect(url_for('login'))
 
-
-@app.route('/iView', methods=['GET', 'POST'])
+@app.route('/iView')
 def iView():
     if session.get("username"):
-        if request.method == 'POST':
-            flash("Success to get inventory data", "success")
-            return render_template("iView.html", inventory_data=getItems())
-        return render_template("iView.html")
+        return render_template("iView.html", inventory_data=getItems())
     else:
         return redirect(url_for('login'))
 
@@ -81,17 +72,14 @@ def search():
             item_target = request.form['product_search'].lower()
             total_inventory = getItems()
             result = []
-
             for item in total_inventory:
                 if item_target in item[0].lower() or item_target in item[1].lower():
                     result.append(item)
-
             if result:
                 return render_template("search.html", inventory_data=result)
             else:
                 return render_template("search.html", inventory_data=False)
-        
-        return render_template("search.html")
+        return render_template("search.html", inventory_data=False)
     else:
         return redirect(url_for('login'))
     
@@ -105,75 +93,13 @@ def export():
                 file_name = f'exported_data_{current_date}.csv'
                 file_path = os.path.join('exports', file_name)
                 df.to_csv(file_path, index=False)
-                flash(f"Successfully to export data at {file_path}", 'success')
+                flash(f"Successfully to export data at exports/{file_name}", 'success')
                 itg.log(f"[{session["username"]}] Inventory exported")
                 return redirect(url_for('export'))
             except Exception as e:
                 flash(f"Error exporting data: {str(e)}", 'error')
                 return redirect(url_for('export'))
         return render_template("export.html", exportData=os.listdir("exports/"))
-    else:
-        return redirect(url_for('login'))
-    
-@app.route('/statistic')
-def statistic():
-    if session.get("username"):
-        inventory_data = {
-            'Product Code': [],
-            'Product Name': [],
-            'Quantity': [],
-            'Price': []
-        }
-        
-        for product in getItems():  # Replace with your actual function to get items
-            inventory_data['Product Code'].append(product[0])
-            inventory_data['Product Name'].append(product[1])
-            inventory_data['Quantity'].append(product[2])
-            inventory_data['Price'].append(product[3])
-
-        df = pd.DataFrame(inventory_data)
-
-        # Filter out products with zero quantity
-        df = df[df['Quantity'] > 0]
-
-        # Generate Pie Chart if there are products to display
-        if not df.empty:
-            plt.figure(figsize=(8, 8))  # Increase figure size for better visibility
-            
-            # Generate colors using a colormap
-            colors = plt.cm.tab20.colors
-            
-            # Create pie chart with product names as labels
-            wedges, texts, autotexts = plt.pie(
-                df['Quantity'], 
-                labels=df['Product Code'],  # Include product names as labels
-                autopct='%1.1f%%', 
-                startangle=90,
-                colors=colors
-            )
-            plt.title('Distribution of Inventory', size=20, weight="bold", color="white")
-            plt.ylabel('')  # Hide y-label for pie charts
-
-            # Adjust text properties for better visibility
-            plt.setp(autotexts, size=12, weight="bold", color="black", 
-                     bbox=dict(facecolor='white', edgecolor='none', boxstyle='round,pad=0.3'))  # Add background box
-            plt.setp(texts, size=12, color="white")  # Adjust label text size and color
-            
-            plt.tight_layout()  # Automatically adjust subplot parameters to give specified padding
-
-            # Ensure the static directory exists
-            static_dir = 'static/stat/pie/'
-            os.makedirs(static_dir, exist_ok=True)
-            img_path = os.path.join(static_dir, 'pie_chart.png')
-
-            # Save with a transparent background
-            plt.savefig(img_path, facecolor='#3b3b3bda')
-            plt.close()  # Close the plot to free memory
-
-            return render_template('statistic.html', inventory_distribution=img_path)
-        else:
-            # Handle case where there are no products to display
-            return render_template('statistic.html', inventory_distribution=None)
     else:
         return redirect(url_for('login'))
 
@@ -247,28 +173,40 @@ def signup():
 #--------------- 
 @app.route('/api/account/update/<type>', methods=['POST'])
 def update_account(type):
+    update_state = False
+    signout = False
     if type == "username":
         username = request.form['username']
         current_user_name = session["username"]
-        if um.userNameVerify(current_user_name):
+        if um.userNameVerify(username):
             um.updateUser("user_name", current_user_name, username)
             session["username"] = username
             flash("Successful to update username", 'success')
+            update_state = True
+            signout = False
         else:
             flash("Require Username already exists", 'error')
-    else:
+            update_state = False
+            signout = False
+    elif type == "password":
         old_password = request.form['password_old']
         current_user_name = session["username"]
         new_user_password = request.form['password']
         if um.logIn(current_user_name, old_password):
             if um.passwordVerify(new_user_password):
                 um.updateUser("user_password", current_user_name, new_user_password)
-                flash("Success to update account password", 'success')
+                flash("Success to update account password, system will signout in 3s automatically.", 'success')
+                update_state = True
+                signout = True
             else:
                 flash("Weak password is not allowed. Try to set up a <a href='{}'>strong password</a>".format(url_for('static', filename='password_policy.txt')), 'error')
+                update_state = False
+                signout = False
         else:
             flash("Old Password incorrect", 'error')
-    return redirect(url_for('dashboard'))
+            update_state = False
+            signout = False
+    return render_template("dashboard.html", username=session['username'], from_admin=from_admin, update_state=update_state, signout=signout)
 
 @app.route('/api/inventory/<type>', methods=['POST'])
 def manageInventory(type):
@@ -326,7 +264,17 @@ def manageInventory(type):
         json.dump(inventory, file)
     itg.writeMD5()
     return redirect(url_for("iManagement"))
-    
+
+@app.route('/api/inventory/checkState')
+def checkState():
+    total_inventory = getItems()
+    result = False
+    item_name = []
+    for item in total_inventory:
+        if item[2] <= 50:
+            result = True
+            item_name.append(item[0])
+    return jsonify({"result": result, "list": item_name})
 
 @app.route('/api/account/delete', methods=['POST'])
 def deleteAcc():
@@ -341,7 +289,7 @@ def deleteAcc():
         if from_admin:
             return redirect(url_for('admin'))
         else:
-            return redirect(url_for('logout'))
+            return redirect(url_for('signout'))
     else:
         flash("Passkey validation fail", 'error')
         if from_admin:
@@ -357,8 +305,8 @@ def downloadAttch(file_name):
     except FileNotFoundError:
         abort(404)
 
-@app.route('/logout')
-def logout():
+@app.route('/signout')
+def signout():
     session.clear()
     return redirect(url_for('login'))
 

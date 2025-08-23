@@ -11,14 +11,14 @@
 
 <body>
     <h1>Dashboard</h1>
-    <form action="{{url_for('update_account', type=" username")}}" method="post" data-fname="Account Information">
+    <form action="{{url_for('update_account', type="username")}}" method="post" data-fname="Account Information">
         <div class="fill_column">
             <label for="username">User Name: </label>
             <input type="text" name="username" id="username" required>
         </div>
         <button type="submit">Save Change</button>
     </form>
-    <form action="{{url_for('update_account', type=" password")}}" method="post" data-fname="Account Security" onsubmit="return validateForm()" id="AcSecureForm">
+    <form action="{{url_for('update_account', type="password")}}" method="post" data-fname="Account Security" onsubmit="return validateForm()" id="AcSecureForm">
         <div class="fill_column">
             <label for="password_old">Old Password: </label>
             <input type="password" name="password_old" id="password_old" required>
@@ -31,7 +31,7 @@
             <label for="password_confirm">Confirm Password: </label>
             <input type="password" name="password_confirm" id="password_confirm" required>
         </div>
-        <button type="submit">Save Change</button>
+        <button type="submit">Save Change {{ update_state }}</button>
         {% if not from_admin %}
         <p style="color: rgb(255, 85, 85); margin: 0; cursor: pointer;"><a onclick='accDel("open")'>Delete My Account</a></p>
         {% endif %}
@@ -71,6 +71,7 @@
                 return false;
             }
         }
+
         document.addEventListener("DOMContentLoaded", function() {
             const flashes = document.querySelectorAll('.flashes li');
             flashes.forEach((flash) => {
@@ -80,6 +81,20 @@
                 }, 5000);
             });
         });
+
+        window.onload = function(){
+            const update_state = "{{update_state}}";
+            const signout = "{{signout}}"
+            if (update_state == "True"){
+                if (signout == "True"){
+                    setTimeout(() => {
+                        window.parent.location.href = '/signout';
+                    }, 3000)
+                }else{
+                    window.parent.location.href = '/';
+                }
+            }
+        }
         function accDel(action){
             popConfirm = document.getElementById("popConfirm")
             if (action == "open"){

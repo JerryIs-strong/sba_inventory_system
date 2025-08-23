@@ -6,27 +6,51 @@
     <title>Inventory System | {{version}}</title>
     <link rel="stylesheet" href="{{url_for('static', filename='css/colors.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/index.css')}}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body>
     <nav>
-        <h3><div class="brand">Paperboat<br> Stationary</div>Welcome back, {{username}}!</h3>
+        <h3><div class="brand">Paperboat<br> Stationary</div>Welcome back, {{username}}! </h3>
+        <a href="{{url_for('signout')}}" class="signout" title="Signout"><span class="material-symbols-outlined">logout</span></a>
     </nav>
+    <marquee behavior="scroll" direction="left" class="inventoryAlert" id="inventoryAlert"></marquee>
     <div class="main">
         <div class="sidebar">
             <div class="toolbtn active" data-page="/iManagement">Inventory Management</div>
             <div class="toolbtn" data-page="/iView">View Inventory</div>
             <div class="toolbtn" data-page="/search">Search</div>
             <div class="toolbtn" data-page="/export">Export Data</div>
-            <div class="toolbtn" data-page="/statistic">Statistic</div>
             <div class="toolbtn" data-page="/dashboard">My Dashboard</div>
             {% if from_admin %}
             <div class="toolbtn" data-page="/admin">Admin Panel</div>
             {% endif %}
-            <a class="toolbtnX signout" href="{{url_for('logout')}}">Signout</a>
         </div>
         <iframe src="/iManagement" frameborder="0" id="mainFrame"></iframe>
     </div>
+    <div class="snapNoti" id="snapNoti">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{% autoescape false %}{{ message }}{% endautoescape %}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
     <script>
+        async function checkInventory() {
+            const response = await fetch("/api/inventory/checkState");
+            alertContent = document.getElementById("inventoryAlert");
+            const data = await response.json();
+            if (data['result'] == true){
+                alertContent.innerText = `Low Inventory Alert: ${data['list']}`;
+                alertContent.style.display = "block";
+            }else{
+                alertContent.style.display = "none";
+            }
+        }
+
         window.onload = function() {
             var peremeter = "{{ re_dir }}";
             if (peremeter) {
@@ -42,6 +66,7 @@
                     }
                 }); 
             }
+            checkInventory()
         }
 
         document.querySelectorAll('.toolbtn').forEach((button) => {
@@ -50,13 +75,32 @@
                     btn.classList.remove("active");
                 });
                 button.classList.add("active");
-                document.getElementById("mainFrame").src = button.getAttribute("data-page")
+                document.getElementById("mainFrame").src = button.getAttribute("data-page");
+            });
+
+            button.addEventListener('mousedown', function(e) {
+                const ripple = document.createElement('span');
+                const rect = button.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+
+                ripple.style.width = ripple.style.height = `${size}px`;
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                ripple.classList.add('ripple');
+
+                button.appendChild(ripple);
             });
         });
 
         document.addEventListener("contextmenu", function(event) {
             event.preventDefault();
         });
+
+        setInterval(() => {
+            checkInventory()
+        }, 1800000);
     </script>
 </body>
 </html>
