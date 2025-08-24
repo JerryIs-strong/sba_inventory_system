@@ -6,6 +6,7 @@
     <title>Inventory System</title>
     <link rel="stylesheet" href="{{url_for('static', filename='css/colors.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/commomPage.css')}}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body>
     <h1>Admin Panel</h1>
@@ -32,7 +33,7 @@
                 <option value="User">User</option>
             </select>
         </div>
-        <button type="submit">Create an account</button>
+        <button type="submit"><span class="material-symbols-outlined btn-icon">add_circle</span>Create an account</button>
     </form>
     <form action="{{url_for('deleteAcc')}}" method="post" data-fname="Remove Account"> 
         <p class="remind">* After select an account, the passkey would show.</p>       
@@ -51,7 +52,7 @@
             <label for="confirm">Confirm passkey: </label>
             <input type="text" name="confirm" id="confirm" placeholder="Please select an account" required>
         </div>
-        <button type="submit" style="background-color: rgb(245, 104, 104);">Delete</button>
+        <button type="submit" style="background-color: rgb(245, 104, 104);"><span class="material-symbols-outlined btn-icon">delete</span>Delete</button>
     </form>
     <div class="output" data-fname="System Log(Today)">
         {% if syslog %}

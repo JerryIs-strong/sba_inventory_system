@@ -142,23 +142,23 @@ a {
 }
 
 .flashes li.success {
-    background-color: #28a745;
+    background-color: var(--message-success);
 }
 
 .flashes li.error {
-    background-color: #dc3545;
+    background-color: var(--message-error);
 }
 
 .flashes li.warning {
-    background-color: #ffc107;
+    background-color: var(--message-warning);
 }
 
 .flashes li.info {
-    background-color: #17a2b8;
+    background-color: var(--message-info);
 }
 
 .inventoryAlert{
-    background-color: #dd4c5b;
+    background-color: var(--message-error);
 }
 
 @keyframes ripple-animation {

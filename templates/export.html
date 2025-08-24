@@ -6,13 +6,14 @@
     <title>Inventory System</title>
     <link rel="stylesheet" href="{{url_for('static', filename='css/colors.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/commomPage.css')}}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body>
     <h1>Export Data</h1>
     <form action="{{url_for('export')}}" method="post" data-fname="Conteol Zone">
         <p class="remind">* When you request and export the data, it is saved in this system, but you can also download the data to your computer if you want to refer to it</p>
         <p class="remind">* Only one data can be exported per day, otherwise the system will automatically replace the exported data with the updated version</p>
-        <button type="submit">Request to export</button>
+        <button type="submit"><span class="material-symbols-outlined btn-icon">file_export</span>Request to export</button>
     </form>
     <div class="output" data-fname="Files Manager">
         <p>export/</p>
@@ -25,7 +26,7 @@
             {% if messages %}
                 <ul class="flashes">
                 {% for category, message in messages %}
-                    <li class="{{ category }}">{% autoescape false %}{{ message }}{% endautoescape %}</li>
+                    <li class="{{ category }}" style="color: var(--font-color);">{% autoescape false %}{{ message }}{% endautoescape %}</li>
                 {% endfor %}
                 </ul>
             {% endif %}

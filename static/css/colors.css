@@ -4,5 +4,11 @@
     --btn-hover-color: #5a5a5ab2;
     --primary-outline: #6d6d6d;
     --font-color: #fff;
-    --btn-color: rgb(56, 121, 207);
+    --btn-color: rgb(31, 78, 230);
+    --message-success: #28a745;
+    --message-error: #dc3545;
+    --message-warning: #ffc107;
+    --message-info: #17a2b8;
+    --input-background: rgba(22, 22, 22, 0.733);
+    --theme-color: #fd61bc;
 }

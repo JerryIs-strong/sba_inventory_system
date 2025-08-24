@@ -6,6 +6,7 @@
     <title>Inventory System</title>
     <link rel="stylesheet" href="{{url_for('static', filename='css/colors.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/commomPage.css')}}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body>
     <h1>Search</h1>
@@ -14,7 +15,7 @@
             <label for="product_search">Product: </label>
             <input type="text" name="product_search" id="product_search" required>
         </div>
-        <button type="submit">Submit</button>
+        <button type="submit"><span class="material-symbols-outlined btn-icon">send</span>Submit</button>
     </form>
     <div class="output" data-fname="Output">
         {% if inventory_data %}

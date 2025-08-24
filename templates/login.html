@@ -14,11 +14,17 @@
         <p class="remind">Welcome to the inventory system with WebUI(Panel)</p>
         <p class="remind" style="margin-bottom: 5px;">(This program should be still work with CLI version)</p>
         <form action="{{url_for('login')}}" method="post">
-            <input type="text" name="username" id="username" placeholder="User Name">
-            <input type="password" name="password" id="password" placeholder="Password">
-            <button type="submit">Submit</button>
+            <div class="fill_column">
+                <input type="text" name="username" id="username" required>
+                <label for="username">User Name</label>
+            </div>
+            <div class="fill_column">
+                <input type="password" name="password" id="password" required>
+                <label for="password">Password</label>
+            </div>
+            <button type="submit"><span class="material-symbols-outlined">login</span>Login</button>
         </form>
-        <p>Don't have an account yet? <a href="{{url_for('signup')}}">Create account</a></p>
+        <p>Don't have an account yet? <a href="{{url_for('signup')}}" style="color: var(--font-color);">Create account</a></p>
         <p class="remind" style="display: flex; align-items: center;"><span class="material-symbols-outlined" style="font-size: 12px; margin-right: 2px; color: rgba(80, 243, 65, 0.788);">security</span>Protected with our integrity system</p>
     </div>
     <div class="snapNoti">

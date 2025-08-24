@@ -7,6 +7,7 @@
     <title>Inventory System</title>
     <link rel="stylesheet" href="{{url_for('static', filename='css/colors.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/commomPage.css')}}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 
 <body>
@@ -16,7 +17,7 @@
             <label for="username">User Name: </label>
             <input type="text" name="username" id="username" required>
         </div>
-        <button type="submit">Save Change</button>
+        <button type="submit"><span class="material-symbols-outlined btn-icon">save</span>Save Change</button>
     </form>
     <form action="{{url_for('update_account', type="password")}}" method="post" data-fname="Account Security" onsubmit="return validateForm()" id="AcSecureForm">
         <div class="fill_column">
@@ -31,7 +32,7 @@
             <label for="password_confirm">Confirm Password: </label>
             <input type="password" name="password_confirm" id="password_confirm" required>
         </div>
-        <button type="submit">Save Change {{ update_state }}</button>
+        <button type="submit"><span class="material-symbols-outlined btn-icon">save</span>Save Change {{ update_state }}</button>
         {% if not from_admin %}
         <p style="color: rgb(255, 85, 85); margin: 0; cursor: pointer;"><a onclick='accDel("open")'>Delete My Account</a></p>
         {% endif %}
@@ -91,7 +92,9 @@
                         window.parent.location.href = '/signout';
                     }, 3000)
                 }else{
-                    window.parent.location.href = '/';
+                    setTimeout(() => {
+                        window.parent.location.href = '/?page=dashboard';
+                    }, 3000)
                 }
             }
         }

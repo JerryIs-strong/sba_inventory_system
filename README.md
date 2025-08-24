@@ -12,5 +12,5 @@ Sample account: \
 - PASSWORD: Password01#
 
 [User]
-- USERNAME: i-show-speed
+- USERNAME: Speeed
 - PASSWORD: Speed1234@

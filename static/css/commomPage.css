@@ -18,6 +18,10 @@ h1{
     font-family: "Shadows Into Light Two", cursive;
 }
 
+a:link, a:visited {
+    color: var(--font-color);
+}
+
 form,.output{
     border: 1px solid var(--second-background-color);
     padding: 30px 20px 10px 20px;
@@ -50,6 +54,10 @@ form input, select{
     max-width: 250px;
 }
 
+form input:focus, select:focus{
+    outline: none;
+}
+
 .fill_column{
     display: flex;
     flex-direction: row;
@@ -65,6 +73,16 @@ form button{
     border-radius: 10px;
     margin: 20px 0 20px 0;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    font-weight: 600;
+}
+
+.btn-icon{
+    font-size: 15px !important;
+    margin-right: 5px;
 }
 
 .snapNoti {
@@ -93,19 +111,19 @@ form button{
 }
 
 .flashes li.success {
-    background-color: #28a745;
+    background-color: var(--message-success);
 }
 
 .flashes li.error {
-    background-color: #dc3545;
+    background-color: var(--message-error);
 }
 
 .flashes li.warning {
-    background-color: #ffc107;
+    background-color: var(--message-warning);
 }
 
 .flashes li.info {
-    background-color: #17a2b8;
+    background-color: var(--message-info);
 }
 
 .remind{

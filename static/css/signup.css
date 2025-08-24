@@ -9,7 +9,7 @@
 
 body{
     font-family: "Noto Sans", sans-serif;
-    background-image: url(../121764304_p0.jpg);
+    background-color: #232323;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -18,8 +18,8 @@ body{
     margin: 0;
 }
 
+
 .main{
-    background-color: var(--second-background-color);
     color: var(--font-color);
     display: flex;
     flex-direction: column;
@@ -29,20 +29,10 @@ body{
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    padding: 20px;
+    padding: 20px 20px 15px 20px;
     width: fit-content;
-    min-width: 360px;
-}
-
-.main form input{
-    background-color: var(--primary-background-color);
-    border: none;
-    padding: 10px;
-    width: 100%;
-    margin: 10px 0;
-    font-size: 20px;
-    color: var(--font-color);
-    border-radius: 30px;
+    min-width: 380px;
+    border: 1px solid #fff;
 }
 
 form{
@@ -61,6 +51,58 @@ form button{
     border-radius: 30px;
     margin-top: 20px;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+form button span{
+    margin-right: 10px;
+    font-size: 15px !important;
+}
+
+.fill_column{
+    width: 100%;
+    position: relative;
+}
+
+.main form input{
+    background-color: #232323;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    margin: 10px 0;
+    font-size: 20px;
+    color: var(--font-color);
+    transition: all 0.3s ease-in-out;
+    border: 1px solid #fff;
+}
+
+form label{
+    position: absolute;
+    opacity: 0.7;
+    color: var(--font-color);
+    top: 20px;
+    left: 10px;
+    transition: all 0.3s ease-in-out;
+    cursor: text;
+    padding: 0 5px;
+}
+
+.fill_column input:focus{
+    border: 1px solid var(--theme-color);
+    outline: none;
+}
+
+.fill_column input:focus + label,
+.fill_column input:valid + label{
+    top: -1px;
+    left: 5px;
+    font-size: 15px;
+    background-color: #232323;
+    opacity: 1;
+    color: var(--theme-color);
 }
 
 form .form_colum{
@@ -97,19 +139,19 @@ select{
 }
 
 .flashes li.success {
-    background-color: #28a745;
+    background-color: var(--message-success);
 }
 
 .flashes li.error {
-    background-color: #dc3545;
+    background-color: var(--message-error);
 }
 
 .flashes li.warning {
-    background-color: #ffc107;
+    background-color: var(--message-warning);
 }
 
 .flashes li.info {
-    background-color: #17a2b8;
+    background-color: var(--message-info);
 }
 
 .version{
