@@ -16,6 +16,18 @@ body{
 
 h1{
     font-family: "Shadows Into Light Two", cursive;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+.headline-icon{
+    font-size: 30px !important;
+    margin-right: 15px;
+    background-color: #0a6cff2c;
+    padding: 10px;
+    border-radius: 30px;
+    color: #4582ddfb;
 }
 
 a:link, a:visited {
@@ -34,6 +46,8 @@ form::before,.output::before{
     color: aliceblue;
     position: absolute;
     margin-top: -42px;
+    padding: 0 5px;
+    background-color: var(--primary-background-color);
     padding: 0 5px;
 }
 
@@ -111,19 +125,31 @@ form button{
 }
 
 .flashes li.success {
-    background-color: var(--message-success);
+    color: var(--message-success-font) !important;
+    background-color: var(--message-success-background);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .flashes li.error {
-    background-color: var(--message-error);
+    color: var(--message-error-font) !important;
+    background-color: var(--message-error-background);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .flashes li.warning {
-    background-color: var(--message-warning);
+    color: var(--message-warning-font) !important;
+    background-color: var(--message-warning-background);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .flashes li.info {
-    background-color: var(--message-info);
+    color: var(--message-info-font) !important;
+    background-color: var(--message-info-background);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .remind{

@@ -9,7 +9,6 @@
 
 body {
     font-family: "Noto Sans", sans-serif;
-    background-image: url(../wallhaven-p2v1vp.jpg);
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -19,6 +18,11 @@ body {
     color: var(--font-color);
     display: flex;
     flex-direction: column;
+    background-color: var(--primary-background-color);
+}
+
+a {
+    text-decoration: none;
 }
 
 h3 {
@@ -90,10 +94,6 @@ iframe {
     height: 100%;
 }
 
-a {
-    text-decoration: none;
-}
-
 .signout:visited {
     color: var(--font-color) !important;
 }
@@ -141,24 +141,30 @@ a {
     animation: slideIn 0.5s forwards, fadeOut 0.5s forwards 3s;
 }
 
-.flashes li.success {
-    background-color: var(--message-success);
-}
-
 .flashes li.error {
-    background-color: var(--message-error);
+    color: var(--message-error-font) !important;
+    background-color: var(--message-error-background);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .flashes li.warning {
-    background-color: var(--message-warning);
+    color: var(--message-warning-font) !important;
+    background-color: var(--message-warning-background);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .flashes li.info {
-    background-color: var(--message-info);
+    color: var(--message-info-font) !important;
+    background-color: var(--message-info-background);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .inventoryAlert{
-    background-color: var(--message-error);
+    background-color: var(--message-warning-background);
+    color: var(--message-warning-font);
 }
 
 @keyframes ripple-animation {

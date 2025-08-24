@@ -307,7 +307,9 @@ def downloadAttch(file_name):
 
 @app.route('/signout')
 def signout():
+    global from_admin
     session.clear()
+    from_admin = False
     return redirect(url_for('login'))
 
 @app.route('/suspend')

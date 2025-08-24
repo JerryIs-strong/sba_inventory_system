@@ -1,14 +1,18 @@
 :root{
-    --primary-background-color: #232323cc;
-    --second-background-color: #3b3b3bda;
-    --btn-hover-color: #5a5a5ab2;
+    --primary-background-color: #192029;
+    --second-background-color: #2c3a4bc5;
+    --btn-hover-color: #49515a98;
     --primary-outline: #6d6d6d;
     --font-color: #fff;
     --btn-color: rgb(31, 78, 230);
-    --message-success: #28a745;
-    --message-error: #dc3545;
-    --message-warning: #ffc107;
-    --message-info: #17a2b8;
+    --message-success-font: #44ee6c;
+    --message-success-background: #10fc4727;
+    --message-error-font: #ff394c;
+    --message-error-background: #f8334741;
+    --message-warning-font: #ffc107;
+    --message-warning-background: #ffc1072d;
+    --message-info-font: #0fcce9;
+    --message-info-background: #16defd41;
     --input-background: rgba(22, 22, 22, 0.733);
-    --theme-color: #fd61bc;
+    --theme-color: #6192fd;
 }

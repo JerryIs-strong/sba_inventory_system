@@ -44,7 +44,7 @@
             alertContent = document.getElementById("inventoryAlert");
             const data = await response.json();
             if (data['result'] == true){
-                alertContent.innerText = `Low Inventory Alert: ${data['list']}`;
+                alertContent.innerText = `⚠ Low Inventory Alert: ${data['list']}`;
                 alertContent.style.display = "block";
             }else{
                 alertContent.style.display = "none";
