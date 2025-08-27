@@ -144,6 +144,13 @@ form .form_colum{
     animation: slideIn 0.5s forwards, fadeOut 0.5s forwards 3s; /* Fade out after 3 seconds */
 }
 
+.flashes li.success {
+    color: var(--message-success-font) !important;
+    background-color: var(--message-success-background);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
 .flashes li.error {
     color: var(--message-error-font) !important;
     background-color: var(--message-error-background);

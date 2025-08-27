@@ -19,6 +19,7 @@
                         <th>Product Name</th>
                         <th>Quantity</th>
                         <th>Price(HKD)</th>
+                        <th>State</th>
                     {% endif %}
                 </tr>
             </thead>
@@ -29,6 +30,7 @@
                         <td>{{ item[1] }}</td>
                         <td>{{ item[2] }}</td>
                         <td>${{ item[3] }}</td>
+                        <td class="{{item[4][0]}} inventory_state">{{item[4][1]}}</td>
                     </tr>
                 {% endfor %}
             </tbody>

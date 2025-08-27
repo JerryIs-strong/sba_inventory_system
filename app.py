@@ -24,7 +24,21 @@ def loadDB():
 def getItems():
     result = []
     for item_code, item_detail in inventory.items():
-        result.append([item_code, item_detail["name"], item_detail["quantity"], item_detail["price"]])
+        state = []
+        quantity = item_detail['quantity']
+        if quantity <= 0:
+            state.append("out_of_stock")
+            if quantity == -999:
+                state.append("Out of stock(Stop Supply)")
+            else:
+                state.append("Out of stock")
+        elif quantity <= 20:
+            state.append("low")
+            state.append("Low Quantity")
+        else:
+            state.append("available")
+            state.append("Available")
+        result.append([item_code, item_detail["name"], item_detail["quantity"], item_detail["price"], state])
     return result
 
 @app.route('/', methods=['GET'])
@@ -239,14 +253,14 @@ def manageInventory(type):
                 "price": inventory[code]['price']
             }
             flash(f"Updated the name of {code} to {modify_data}", 'info')
-            itg.log(f"[{code}] ⭕{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🟡{inventory[code]['price']}", True)
+            itg.log(f"[{code}] ⭕{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🟡${inventory[code]['price']}", True)
         elif modify_type == "quantity":
             init_quantity = inventory[code]["quantity"]
             inventory[code]["quantity"] = int(modify_data)
             if init_quantity > int(modify_data):
-                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🔽{init_quantity - int(modify_data)} --> {int(modify_data)} 🟡{inventory[code]['price']}", True)
+                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🔽{init_quantity - int(modify_data)} --> {int(modify_data)} 🟡${inventory[code]['price']}", True)
             elif init_quantity < int(modify_data):
-                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🔼{int(modify_data) - init_quantity} --> {int(modify_data)} 🟡{inventory[code]['price']}", True)
+                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🔼{int(modify_data) - init_quantity} --> {int(modify_data)} 🟡${inventory[code]['price']}", True)
             else:
                 itg.log(f"[{code}] 🟡{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🟡${int(modify_data)}", True)
             flash(f"Updated the quantity of {code} to {int(modify_data)}", 'info')
@@ -271,31 +285,22 @@ def checkState():
     result = False
     item_name = []
     for item in total_inventory:
-        if item[2] <= 50:
+        if item[2] <= 20 and item[2] != -999:
             result = True
             item_name.append(item[0])
     return jsonify({"result": result, "list": item_name})
 
 @app.route('/api/account/delete', methods=['POST'])
 def deleteAcc():
-    if from_admin:
-        username = request.form.get('username')
-    else:
-        username = session['username']
+    username = request.form.get('username')
     passkey = request.form.get('confirm')
     if passkey == f'Confirm to delete "{username}"':
         um.deleteUser(username)
         flash(f'Success to delete user "{username}"', 'success')
-        if from_admin:
-            return redirect(url_for('admin'))
-        else:
-            return redirect(url_for('signout'))
+        return redirect(url_for('admin'))
     else:
         flash("Passkey validation fail", 'error')
-        if from_admin:
-            return redirect(url_for('admin'))
-        else:
-            return redirect(url_for('dashboard'))
+        return redirect(url_for('admin'))
         
 @app.route('/api/download/attachment/<file_name>', methods=['GET', 'POST'])
 def downloadAttch(file_name):

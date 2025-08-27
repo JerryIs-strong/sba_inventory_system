@@ -171,6 +171,25 @@ table, td, th {
     border: 3px solid var(--primary-background-color);
 }
 
+.inventory_state{
+    text-align: center;
+}
+
+.available{
+    background-color: var(--message-success-background);
+    color: var(--message-success-font);
+}
+
+.out_of_stock{
+    background-color: var(--message-error-background);
+    color: var(--message-error-font);
+}
+
+.low{
+    background-color: var(--message-warning-background);
+    color: var(--message-warning-font);
+}
+
 @keyframes slideIn {
     from {
         opacity: 0;

@@ -141,7 +141,14 @@ select{
     border-radius: 5px;
     opacity: 0;
     transform: translateY(-20px);
-    animation: slideIn 0.5s forwards, fadeOut 0.5s forwards 3s; /* Fade out after 3 seconds */
+    animation: slideIn 0.5s forwards, fadeOut 0.5s forwards 3s;
+}
+
+.flashes li.success {
+    color: var(--message-success-font) !important;
+    background-color: var(--message-success-background);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .flashes li.error {
