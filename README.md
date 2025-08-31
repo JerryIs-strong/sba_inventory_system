@@ -7,7 +7,7 @@
 
 ## Test
 1. Sample Account \
-Sample account: \
+
 [Admin] 
 - USERNAME: Admin
 - PASSWORD: Password01#
