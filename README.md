@@ -1,6 +1,9 @@
 # sba_inventory_system
 
 ## Start
+> [!WARNING]
+> Before running this program, please don't forget to install the dependency first with ```    pip install -r requirements.txt```
+
 1. Open this project' root path, run ```python app.py```
 2. The console should display which port the sever is running on 
 3. Open system pannel with your prefence browser
