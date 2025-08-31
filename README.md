@@ -17,27 +17,20 @@
 - PASSWORD: Speed1234@
 
 2️⃣Test cases
-#------------------------
-# Inventory Management
-#------------------------
+
+Inventory Management
 - Sale 20 Blue Pen[BP001A]
 - Sale 5 Black Pen[BL001A] with 5% off
 - 100 Red Pen[R001A] was damaged and returned to the supplier
 - The arrival of 50 Blue Pen[B001A]
 - A pack of Pen[jup001003] returned from a customer
 
-#---------------
-# Search item
-#---------------
+Search item
 - Goto "View" tab
 - Search "0.7"
 - Search product code "BP001A"
 - Search product name "Black Pen"
 
-
-#---------------
-# User Account
-#---------------
 - Add a user call "man" from signup page with password "Samsung01#"
 - Goto dashboard and change the username to "yo-man"
 - Change the password from "Samsung01#" to "Securepassword02#"
