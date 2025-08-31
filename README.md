@@ -6,7 +6,7 @@
 3. Open system pannel with your prefence browser
 
 ## Test
-1. Sample Account
+1. Sample Account \
 Sample account: \
 [Admin] 
 - USERNAME: Admin
