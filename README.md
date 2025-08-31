@@ -25,12 +25,13 @@ Inventory Management
 - The arrival of 50 Blue Pen[B001A]
 - A pack of Pen[jup001003] returned from a customer
 
-Search item
+Search Item
 - Goto "View" tab
 - Search "0.7"
 - Search product code "BP001A"
 - Search product name "Black Pen"
 
+Account Management
 - Add a user call "man" from signup page with password "Samsung01#"
 - Goto dashboard and change the username to "yo-man"
 - Change the password from "Samsung01#" to "Securepassword02#"
