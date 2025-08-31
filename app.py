@@ -46,7 +46,7 @@ def home():
     global from_admin
     from_admin = session.get("group") == "Admin"
     if itg.verifyMD5():
-        if session.get("username"):  
+        if session.get('username'):  
             if 'page' in request.args:
                 page = request.args['page']
                 return render_template("index.html", version=sys_version, p_version=p_version, username=session["username"], from_admin=from_admin, re_dir=page)
@@ -59,7 +59,7 @@ def home():
     
 @app.route('/dashboard')
 def dashboard():
-    if session.get("username"):
+    if session.get('username'):
         print(from_admin)
         return render_template("dashboard.html", username=session['username'], from_admin=from_admin)
     else:
@@ -67,21 +67,21 @@ def dashboard():
 
 @app.route('/iManagement/')
 def iManagement():
-    if session.get("username"):
+    if session.get('username'):
         return render_template("iManagement.html", inventory_data=getItems())
     else:
         return redirect(url_for('login'))
 
 @app.route('/iView')
 def iView():
-    if session.get("username"):
+    if session.get('username'):
         return render_template("iView.html", inventory_data=getItems())
     else:
         return redirect(url_for('login'))
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
-    if session.get("username"):
+    if session.get('username'):
         if request.method == 'POST':
             item_target = request.form['product_search'].lower()
             total_inventory = getItems()
@@ -99,7 +99,7 @@ def search():
     
 @app.route('/export', methods=['GET','POST'])
 def export():
-    if session.get("username"):
+    if session.get('username'):
         if request.method == 'POST':
             try:
                 df = pd.DataFrame([ {"Product Code": code, "Product Name": item["name"], "Quantity": item["quantity"]} for code, item in inventory.items() ])
@@ -119,7 +119,7 @@ def export():
 
 @app.route('/admin')
 def admin():
-    if session.get("username"):
+    if session.get('username'):
         if session.get("group") != "Admin":
             return(redirect(url_for('/')))
         else:
@@ -148,7 +148,7 @@ def login():
         if um.logIn(username, password):
             session["username"] = username
             session["group"] = um.getUserGroup(username)
-            itg.log(f'[{session["username"]}] User "{username}" success to sign-in system')
+            itg.log(f'[{session["group"]}] User "{username}" success to sign-in system')
             return redirect(url_for('home'))
         else:
             itg.log(f'[Guest] User "{username}" try to signin into system')
@@ -167,9 +167,11 @@ def signup():
                 um.createUser(username, password, group)
                 if from_admin:
                     flash(f"Success to add user {username}[{group}]", 'success')
+                    itg.log(f'[{session["group"]}] User "{username}"[{group}] added')
                     return redirect(url_for('admin'))
                 else:
                     flash(f"Success to create your account", 'success')
+                    itg.log(f'[Guest] User "{username}" added')
                     return redirect(url_for('login'))
             else:
                 flash("Weak password is not allowed. Try to set up a <a href='{}'>strong password</a>".format(url_for('static', filename='password_policy.txt')), 'error')
@@ -198,6 +200,7 @@ def update_account(type):
             flash("Successful to update username", 'success')
             update_state = True
             signout = False
+            itg.log(f'[{session["group"]}] "{current_user_name}" changed user name to "{username}"')
         else:
             flash("Require Username already exists", 'error')
             update_state = False
@@ -235,12 +238,12 @@ def manageInventory(type):
             "price": int(price)
         }
         flash(f"Added item {code} with quantity {quantity} amd price ${price}", 'info')
-        itg.log(f"[{code}] ⭕{name} 🔼{quantity} 🔼${price}", True)
+        itg.log(f"[{code}] ⭕{name} 🔼{quantity} 🔼${price}")
     elif type == "remove":
         code = request.form.get("product_remove")
         name = inventory[code]['name']
         del inventory[code]
-        itg.log(f"[{code}] ❌{name}", True)
+        itg.log(f"[{code}] ❌{name}")
         flash(f'Success to delete item "{code}"', 'success')
     elif type == "update":
         code = request.form.get("product_code")
@@ -253,26 +256,26 @@ def manageInventory(type):
                 "price": inventory[code]['price']
             }
             flash(f"Updated the name of {code} to {modify_data}", 'info')
-            itg.log(f"[{code}] ⭕{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🟡${inventory[code]['price']}", True)
+            itg.log(f"[{code}] ⭕{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🟡${inventory[code]['price']}")
         elif modify_type == "quantity":
             init_quantity = inventory[code]["quantity"]
             inventory[code]["quantity"] = int(modify_data)
             if init_quantity > int(modify_data):
-                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🔽{init_quantity - int(modify_data)} --> {int(modify_data)} 🟡${inventory[code]['price']}", True)
+                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🔽{init_quantity - int(modify_data)} --> {int(modify_data)} 🟡${inventory[code]['price']}")
             elif init_quantity < int(modify_data):
-                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🔼{int(modify_data) - init_quantity} --> {int(modify_data)} 🟡${inventory[code]['price']}", True)
+                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🔼{int(modify_data) - init_quantity} --> {int(modify_data)} 🟡${inventory[code]['price']}")
             else:
-                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🟡${int(modify_data)}", True)
+                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🟡${int(modify_data)}")
             flash(f"Updated the quantity of {code} to {int(modify_data)}", 'info')
         elif modify_type == "price":
             init_price = inventory[code]['price']
             inventory[code]['price'] = int(modify_data)
             if init_price > int(modify_data):
-                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🔽${init_price - int(modify_data)} --> ${int(modify_data)}", True)
+                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🔽${init_price - int(modify_data)} --> ${int(modify_data)}")
             elif init_price < int(modify_data):
-                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🔼${init_price - int(modify_data)} --> ${int(modify_data)}", True)
+                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🔼${init_price - int(modify_data)} --> ${int(modify_data)}")
             else:
-                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🟡${int(modify_data)}", True)
+                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🟡${int(modify_data)}")
             flash(f"Updated the quantity of {code} to {int(modify_data)}", 'info')
     with open('./data/inventoryDB.json', 'w') as file:
         json.dump(inventory, file)
@@ -296,6 +299,7 @@ def deleteAcc():
     passkey = request.form.get('confirm')
     if passkey == f'Confirm to delete "{username}"':
         um.deleteUser(username)
+        itg.log(f'[{session["group"]}] User "{username}" deleted')
         flash(f'Success to delete user "{username}"', 'success')
         return redirect(url_for('admin'))
     else:
@@ -313,14 +317,22 @@ def downloadAttch(file_name):
 @app.route('/signout')
 def signout():
     global from_admin
+    itg.log(f'[{session["group"]}] User "{session["username"]}" signout the system')
     session.clear()
     from_admin = False
     return redirect(url_for('login'))
 
 @app.route('/suspend')
 def suspend():
-    session.clear()
-    return render_template("danger.html")
+    if not itg.verifyMD5():
+        if session.get('username'):
+            itg.log(f'[{session["group"]}] "{session["username"]}": System suspend')
+        else:
+            itg.log(f'[Gust] "Guest": System suspend')
+        session.clear()
+        return render_template("danger.html")
+    else:
+        return redirect(url_for('home'))
 
 if __name__ == "__main__":
     loadDB()

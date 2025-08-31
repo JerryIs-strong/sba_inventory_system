@@ -2,8 +2,9 @@
 
 ## Start
 > [!WARNING]
-> Before running this program, please don't forget to install the dependency first with ```    pip install -r requirements.txt```
+> Before running this program, please don't forget to install the dependency first with ```pip install -r requirements.txt```
 
+0. It is recommant that to create a  virtual enviroment before install the dependency and running this app with ```python -m venv env```
 1. Open this project' root path, run ```python app.py```
 2. The console should display which port the sever is running on 
 3. Open system pannel with your prefence browser
