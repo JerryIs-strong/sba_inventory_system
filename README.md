@@ -9,8 +9,7 @@
 3. Open system pannel with your prefence browser
 
 ## Test
-
-1️⃣Sample Account
+1️⃣Sample Account \
 [Admin] 
 - USERNAME: Admin
 - PASSWORD: Password01#
@@ -18,7 +17,7 @@
 [User]
 - USERNAME: Speeed
 - PASSWORD: Speed1234@
-
+<hr>
 2️⃣Test cases
 
 Inventory Management
