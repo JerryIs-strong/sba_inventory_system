@@ -17,4 +17,8 @@
 - PASSWORD: Speed1234@
 
 2️⃣Test cases
-- Sale a Blue Pen[]
+- Sale 20 Blue Pen[BP001A]
+- Sale 5 Black Pen[BL001A] with 5% off
+- 100 Red Pen[R001A] was damaged and returned to the supplier
+- The arrival of 50 Blue Pen[B001A]
+- A pack of Pen returned from a customer
