@@ -1,7 +1,7 @@
 from flask import Flask, request, session, redirect, render_template, url_for, flash, abort, send_file, jsonify
 import json, os
 import pandas as pd
-from datetime import datetime
+import datetime
 import pytz
 import module.integrity as itg
 from module.userManagement import UserManager
@@ -64,7 +64,7 @@ def dashboard():
     else:
         return redirect(url_for('login'))
 
-@app.route('/iManagement/')
+@app.route('/iManagement')
 def iManagement():
     if session.get('username'):
         return render_template("iManagement.html", inventory_data=getItems())
