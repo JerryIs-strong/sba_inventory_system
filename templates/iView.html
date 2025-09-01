@@ -11,16 +11,15 @@
 <body>
     <h1><span class="material-symbols-outlined headline-icon">list_alt</span>View Inventory</h1>
     <div class="output" data-fname="Output">
+        {% if inventory_data %}
         <table>
             <thead>
                 <tr>
-                    {% if inventory_data %}
-                        <th>Product Code</th>
-                        <th>Product Name</th>
-                        <th>Quantity</th>
-                        <th>Price(HKD)</th>
-                        <th>State</th>
-                    {% endif %}
+                    <th>Product Code</th>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Price(HKD)</th>
+                    <th>State</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,6 +34,8 @@
                 {% endfor %}
             </tbody>
         </table>
+        <h3>Total inventory value: HKD${{total_value}}</h3>
+        {% endif %}
     </div>
     <div class="snapNoti">
         {% with messages = get_flashed_messages(with_categories=true) %}

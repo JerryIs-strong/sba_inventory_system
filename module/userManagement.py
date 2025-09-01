@@ -1,7 +1,5 @@
 import sqlite3
 import bcrypt
-import os
-import hashlib
 
 class UserManager:
     def __init__(self):
@@ -13,7 +11,7 @@ class UserManager:
         return hashed
 
     def init_DB(self):
-        with sqlite3.connect("data/user.db") as con:
+        with sqlite3.connect('data/user.db') as con:
             cur = con.cursor()
             cur.execute('''
                 CREATE TABLE IF NOT EXISTS users (
@@ -25,7 +23,7 @@ class UserManager:
             con.commit()
 
     def getUserGroup(self, user_name):
-        with sqlite3.connect("data/user.db") as con:
+        with sqlite3.connect('data/user.db') as con:
             cur = con.cursor()
             cur.execute('SELECT user_group FROM users WHERE user_name = ?', (user_name,))
             user_group = cur.fetchone()[0]
@@ -33,13 +31,13 @@ class UserManager:
             return user_group
 
     def createUser(self, user_name, password, user_group):
-        with sqlite3.connect("data/user.db") as con:
+        with sqlite3.connect('data/user.db') as con:
             cur = con.cursor()
             cur.execute('INSERT INTO users (user_name, user_password, user_group) VALUES (?, ?, ?)', (user_name, self.hash_password(password), user_group))
             con.commit()
 
     def getUserList(self):
-        with sqlite3.connect("data/user.db") as con:
+        with sqlite3.connect('data/user.db') as con:
             cur = con.cursor()
             cur.execute('SELECT user_name FROM users')
             user_list = cur.fetchall()
@@ -51,13 +49,13 @@ class UserManager:
             return result
         
     def deleteUser(self, user_name):
-        with sqlite3.connect("data/user.db") as con:
+        with sqlite3.connect('data/user.db') as con:
             cur = con.cursor()
             cur.execute('DELETE FROM users WHERE user_name = ?', (user_name,))
             con.commit()
     
     def logIn(self, user_name, user_password):
-        with sqlite3.connect("data/user.db") as con:
+        with sqlite3.connect('data/user.db') as con:
             cur = con.cursor()
             cur.execute('SELECT user_password FROM users WHERE user_name = ?', (user_name,))
             user = cur.fetchone()
@@ -72,7 +70,7 @@ class UserManager:
                 return False
 
     def updateUser(self, type, old_user_info, new_user_info):
-        with sqlite3.connect("data/user.db") as con:
+        with sqlite3.connect('data/user.db') as con:
             cur = con.cursor()
             
             if type == "user_name":
@@ -100,7 +98,7 @@ class UserManager:
             return False
             
     def userNameVerify(self, user_name):
-        with sqlite3.connect("data/user.db") as con:
+        with sqlite3.connect('data/user.db') as con:
             cur = con.cursor()
             cur.execute('SELECT COUNT(*) FROM users WHERE user_name = ?', (user_name,))
             exists = cur.fetchone()[0]

@@ -74,7 +74,11 @@ def iManagement():
 @app.route('/iView')
 def iView():
     if session.get('username'):
-        return render_template("iView.html", inventory_data=getItems())
+        total_value = 0
+        for item in getItems():
+            if item[2] != -999:
+                total_value += (item[2] * item[3])
+        return render_template("iView.html", inventory_data=getItems(), total_value=total_value)
     else:
         return redirect(url_for('login'))
 
@@ -181,7 +185,6 @@ def signup():
         else:
             return redirect(url_for('login'))
     return render_template('signup.html', from_admin=from_admin, version=sys_version)
-
 
 #---------------
 #     API
