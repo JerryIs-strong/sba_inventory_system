@@ -3,7 +3,6 @@ import json, os
 import pandas as pd
 from datetime import datetime
 import pytz
-import datetime
 import module.integrity as itg
 from module.userManagement import UserManager
 
