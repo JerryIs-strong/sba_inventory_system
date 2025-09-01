@@ -272,7 +272,7 @@ def manageInventory(type):
             if init_price > int(modify_data):
                 itg.log(f"[{code}] 🟡{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🔽${init_price - int(modify_data)} --> ${int(modify_data)}", True)
             elif init_price < int(modify_data):
-                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🔼${init_price - int(modify_data)} --> ${int(modify_data)}", True)
+                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🔼${int(modify_data) - init_price} --> ${int(modify_data)}", True)
             else:
                 itg.log(f"[{code}] 🟡{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🟡${int(modify_data)}", True)
             flash(f"Updated the quantity of {code} to {int(modify_data)}", 'info')
