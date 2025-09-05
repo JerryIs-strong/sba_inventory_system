@@ -1,6 +1,0 @@
-2025-08-23 22:24:57.537440+08:00 [Guest] User "Admin" try to signin into system
-2025-08-23 22:25:06.716588+08:00 [Admin] User "Admin" success to sign-in system
-2025-08-23 23:20:23.584863+08:00 [Admin] Inventory exported
-2025-08-23 23:21:21.469056+08:00 [Admin] Inventory exported
-2025-08-23 23:21:25.110253+08:00 [Admin] Inventory exported
-2025-08-23 23:28:10.164170+08:00 [Admin] User "Admin" success to sign-in system

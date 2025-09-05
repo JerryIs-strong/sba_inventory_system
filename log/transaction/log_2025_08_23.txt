@@ -1,3 +1,0 @@
-2025-08-23 23:29:34.115031+08:00 [Product_Code]abc;[Product_Name]cba;[Product_Quantity]N/A(-999);[Product_Price]N/A(-999)
-2025-08-23 23:31:56.239218+08:00 [abc] ⭕abc 🔼10 🔼$10
-2025-08-23 23:32:01.290386+08:00 [abc] ❌abc

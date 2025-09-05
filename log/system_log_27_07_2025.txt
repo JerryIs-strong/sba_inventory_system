@@ -1,4 +1,0 @@
-2025-07-27 20:17:19.617186 [Admin] [View Inventory]: Get inventory
-2025-07-27 20:19:24.701105 [Jason] [User Management] User Jason fail to log-in system
-2025-07-27 20:19:58.556740 [Jason] [User Management] User Jason fail to log-in system
-2025-07-27 20:20:10.716806 [Jason] [User Management] User Jason success to log-in system

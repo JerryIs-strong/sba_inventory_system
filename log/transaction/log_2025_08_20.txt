@@ -1,2 +1,0 @@
-2025-08-20 21:47:29.603928+08:00 [Product_Code]abc;[Product_Name]abc;[Product_Quantity]0(0);[Product_Price]20(+20)
-2025-08-20 21:52:54.094312+08:00 [Product_Code]abc;[Product_Name]cba;[Product_Quantity]0(0);[Product_Price]20(0)
