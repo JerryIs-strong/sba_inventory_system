@@ -162,7 +162,7 @@ iframe {
     -webkit-backdrop-filter: blur(10px);
 }
 
-.flashes li.info {
+.flashes li.info{
     color: var(--message-info-font) !important;
     background-color: var(--message-info-background);
     backdrop-filter: blur(10px);
@@ -172,6 +172,20 @@ iframe {
 .inventoryAlert{
     background-color: var(--message-warning-background);
     color: var(--message-warning-font);
+    justify-content: center;
+    overflow: hidden;
+    display: none;
+}
+
+.inventoryAlert .main_alert{
+    animation: announce 30s linear infinite;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.inventoryAlert:hover > .main_alert{
+    animation-play-state: paused;
 }
 
 @keyframes ripple-animation {
@@ -197,5 +211,14 @@ iframe {
         opacity: 0;
         transform: translateY(20px);
         display: none;
+    }
+}
+
+@keyframes announce {
+    from{
+        transform: translateX(100%);
+    }
+    to{
+        transform: translateX(-100%);
     }
 }

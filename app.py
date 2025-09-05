@@ -5,6 +5,8 @@ import datetime
 import pytz
 import module.integrity as itg
 from module.userManagement import UserManager
+import time
+from threading import Thread
 
 app = Flask(__name__)
 app.secret_key = 'super_inventory_system'
@@ -12,7 +14,7 @@ app.secret_key = 'super_inventory_system'
 inventory = {}
 timezone = pytz.timezone('Asia/Hong_Kong')
 um = UserManager()
-sys_version, p_version = itg.sysInfo()
+sys_version = itg.sysInfo()["version"]
 from_admin = False
 
 def loadDB():
@@ -40,6 +42,23 @@ def getItems():
         result.append([item_code, item_detail["name"], item_detail["quantity"], item_detail["price"], state])
     return result
 
+def inventoryMonitor():
+    while True:
+        total_inventory = getItems()
+        file_path = 'static/low_inventory.json'
+        low_quantity = []
+        level = itg.sysInfo()['sys_setting']['low_quantity']
+        for item in total_inventory:
+            if item[2] <= level and item[2] != -999:
+                low_quantity.append(item[0])
+        with open(file_path, "w") as f:
+            if len(low_quantity) > 0:
+                json.dump(low_quantity, f)
+                low_quantity = []
+            else:
+                json.dump({}, f)
+        time.sleep(3600)
+
 @app.route('/', methods=['GET'])
 def home():
     global from_admin
@@ -48,9 +67,9 @@ def home():
         if session.get('username'):  
             if 'page' in request.args:
                 page = request.args['page']
-                return render_template("index.html", version=sys_version, p_version=p_version, username=session["username"], from_admin=from_admin, re_dir=page)
+                return render_template("index.html", version=sys_version, username=session["username"], from_admin=from_admin, re_dir=page)
             else:
-                return render_template("index.html", version=sys_version, p_version=p_version, username=session["username"], from_admin=from_admin)
+                return render_template("index.html", version=sys_version, username=session["username"], from_admin=from_admin)
         else:
             return redirect(url_for('login'))
     else:
@@ -338,4 +357,7 @@ def suspend():
 
 if __name__ == "__main__":
     loadDB()
+    monitor_thread = Thread(target=inventoryMonitor)
+    monitor_thread.daemon = True
+    monitor_thread.start()
     app.run(debug=True)

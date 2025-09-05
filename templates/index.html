@@ -13,7 +13,11 @@
         <h3><div class="brand">Paperboat<br> Stationary</div>Welcome back, {{username}}! </h3>
         <a href="{{url_for('signout')}}" class="signout" title="Signout"><span class="material-symbols-outlined">logout</span></a>
     </nav>
-    <marquee behavior="scroll" direction="left" class="inventoryAlert" id="inventoryAlert"></marquee>
+    <div class="inventoryAlert" id="inventoryAlert">
+        <div class="main_alert">
+            <div id="low_quantity_announce"></div>
+        </div>
+    </div>
     <div class="main">
         <div class="sidebar">
             <div class="toolbtn active" data-page="/iManagement">Inventory Management</div>
@@ -39,16 +43,21 @@
         {% endwith %}
     </div>
     <script>
-        async function checkInventory() {
-            const response = await fetch("/api/inventory/checkState");
-            alertContent = document.getElementById("inventoryAlert");
-            const data = await response.json();
-            if (data['result'] == true){
-                alertContent.innerText = `⚠ Low Inventory Alert: ${data['list']}`;
-                alertContent.style.display = "block";
-            }else{
-                alertContent.style.display = "none";
-            }
+        function checkInventory() {
+            const wrapper = document.getElementById("inventoryAlert")
+            const messageWrapper = document.getElementById("low_quantity_announce");
+            fetch("static/low_inventory.json")
+                .then((response) => response.json())
+                .then((data) => {
+                    if (Object.keys(data).length > 0) {
+                    const message = data.join(", ");
+                        wrapper.style.display = "flex";
+                        messageWrapper.innerText = `[Inventory Monitor] Low Quantity Items: ${message}`;
+                    } else {
+                        wrapper.style.display = "none";
+                        messageWrapper.innerText = ``;
+                    }
+                })
         }
 
         window.onload = function() {
@@ -100,7 +109,7 @@
 
         setInterval(() => {
             checkInventory()
-        }, 1800000);
+        }, 10000);
     </script>
 </body>
 </html>
