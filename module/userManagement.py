@@ -107,4 +107,3 @@ class UserManager:
                 return False
             else:
                 return True
-
