@@ -23,10 +23,8 @@
 
 Inventory Management
 - Sale 20 Blue Pen[BP001A]
-- Sale 5 Black Pen[BL001A] with 5% off
 - 100 Red Pen[R001A] was damaged and returned to the supplier
 - The arrival of 50 Blue Pen[B001A]
-- A pack of Pen[jup001003] returned from a customer
 
 Search Item
 - Goto "View" tab
