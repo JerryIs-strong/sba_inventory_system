@@ -1,2 +1,0 @@
-2025-09-05 15:20:18.414147+08:00 [Admin] Inventory exported
-2025-09-05 15:22:33.605209+08:00 [Admin] User "Admin" signout the system
