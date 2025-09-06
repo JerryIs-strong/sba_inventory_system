@@ -10,24 +10,27 @@
 </head>
 <body>
     <div class="main">
-        <h1><span class="material-symbols-outlined" style="margin-right: 5px;">person_add</span>Signup</h1>
-        <p class="remind" style="margin-bottom: 5px;">You should create an account with a strong password</p>
-        <form action="{{url_for('signup')}}"  method="post" onsubmit="return validateForm()">
-            <div class="fill_column">
-                <input type="text" name="username" id="username" required>
-                <label for="username">User Name</label>
-            </div>
-            <div class="fill_column">
-                <input type="password" name="password" id="password" required>
-                <label for="password">Password</label>
-            </div>
-            <div class="fill_column">
-                <input type="password" name="password_confirm" id="password_confirm" required>
-                <label for="password_confirm">Password confirm</label>
-            </div>
-            <button type="submit"><span class="material-symbols-outlined">send</span>Submit</button>
-        </form>
-        <p>Already have an account? <a href="{{url_for('login')}}" style="color: var(--font-color);">Login</a></p>
+        <div class="welcome_image"></div>
+        <div class="login_form">
+            <h1><span class="material-symbols-outlined" style="margin-right: 5px;">person_add</span>Signup</h1>
+            <p class="remind" style="margin-bottom: 5px;">You should create an account with a strong password</p>
+            <form action="{{url_for('signup')}}"  method="post" onsubmit="return validateForm()">
+                <div class="fill_column">
+                    <input type="text" name="username" id="username" required>
+                    <label for="username">User Name</label>
+                </div>
+                <div class="fill_column">
+                    <input type="password" name="password" id="password" required>
+                    <label for="password">Password</label>
+                </div>
+                <div class="fill_column">
+                    <input type="password" name="password_confirm" id="password_confirm" required style="margin-bottom: 0;">
+                    <label for="password_confirm">Password confirm</label>
+                </div>
+                <button type="submit"><span class="material-symbols-outlined">send</span>Submit</button>
+            </form>
+            <p>Already have an account? <a href="{{url_for('login')}}" style="color: var(--font-color);">Login</a></p>
+        </div>
     </div>
     <div class="snapNoti">
         {% with messages = get_flashed_messages(with_categories=true) %}

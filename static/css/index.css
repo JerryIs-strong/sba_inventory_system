@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Kings&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Mynerve&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Protest+Revolution&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Mynerve&display=swap');
 
 * {
     box-sizing: border-box;
@@ -26,7 +26,7 @@ a {
 }
 
 h3 {
-    font-family: "Kings", cursive;
+    font-family: "Protest Revolution", sans-serif;
     margin: 0;
     font-size: 35px;
     display: flex;

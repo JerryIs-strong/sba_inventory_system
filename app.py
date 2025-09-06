@@ -33,7 +33,7 @@ def getItems():
                 state.append("Out of stock(Stop Supply)")
             else:
                 state.append("Out of stock")
-        elif quantity <= 20:
+        elif quantity <= itg.sysInfo()['sys_setting']['low_quantity']:
             state.append("low")
             state.append("Low Quantity")
         else:
@@ -158,7 +158,7 @@ def admin():
                     syslog.reverse()
             else:
                 syslog = False
-            return render_template("admin.html", user_list=um.getUserList(), transactions=transactions, syslog=syslog)
+            return render_template("admin.html", user_list=um.getUserList(), transactions=transactions, syslog=syslog, low_level=itg.sysInfo()['sys_setting']['low_quantity'], sys_running_info=itg.sysInfo())
     else:
         return redirect(url_for('login'))
     
@@ -334,6 +334,18 @@ def downloadAttch(file_name):
         return send_file(file_path, as_attachment=True)
     except FileNotFoundError:
         abort(404)
+
+@app.route('/api/system/setting', methods=['POST'])
+def updateSysSetting():
+    if request.method == 'POST':
+        with open('data/system.json', 'r') as f:
+            sysData = json.load(f)
+        new_level = request.form.get("lowInvRange")
+        sysData["sys_setting"]["low_quantity"] = int(new_level)
+        with open('data/system.json', 'w') as f:
+            json.dump(sysData, f)
+            flash("Success to update low quantity level", "success")
+    return redirect(url_for('admin'))
 
 @app.route('/signout')
 def signout():

@@ -10,6 +10,14 @@
 </head>
 <body>
     <h1><span class="material-symbols-outlined headline-icon">admin_panel_settings</span>Admin Panel</h1>
+    <form action="{{url_for('updateSysSetting')}}"  method="post" data-fname="System Settings">
+        <div class="fill_column">
+            <label for="username">Low Quantity Level: </label>
+            <input type="range" min="0" max="100" value="{{low_level}}" step="5" id="lowInvRange" name="lowInvRange" class="slider">
+            <div id="lowInvHint" style="margin-left: 10px; opacity: 0.5;">{{low_level}}</div>
+        </div>
+        <button type="submit"><span class="material-symbols-outlined btn-icon">save</span>Save change</button>
+    </form>
     <form action="{{url_for('signup')}}"  method="post" onsubmit="return validateForm()" data-fname="Create Account">
         <p class="remind">* Only administrator can create a new account with 'Admin' group</p>
         <p class="remind">* With great power comes great responsibility</p>
@@ -72,6 +80,10 @@
             <p>No Transactions</p>
         {% endif %}
     </div>
+    <div class="output" data-fname="System Running Information">
+        <div style="display: flex; margin: 0 0 10px 0; justify-content: space-between;">Inventory System Version: <div style="color: var(--theme-color); background-color: #2d52a54a; width: fit-content; padding: 2px 10px; border-radius: 30px; margin-left: 10px;">{{sys_running_info['version']}}</div></div>
+        <div style="display: flex; margin: 10px 0; justify-content: space-between;">Inventory Panel Version: <div style="color: var(--theme-color); background-color: #2d52a54a; width: fit-content; padding: 2px 10px; border-radius: 30px; margin-left: 10px;">{{sys_running_info['p_version']}}</div></div>
+    </div>
     <div class="snapNoti">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -105,6 +117,11 @@
                 document.getElementById("confirm").placeholder = 'Please select an account'
             }
         })
+
+        var slider = document.getElementById("lowInvRange");
+        slider.oninput = function() {
+            document.getElementById("lowInvHint").innerText = this.value
+        }
     </script>
 </body>
 </html>
