@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Mynerve&family=Kings&display=swap');
 
 *{
     box-sizing: border-box;
@@ -205,9 +205,30 @@ select{
 }
 
 h1{
-    margin: 5px 0 5px 0;
+    margin: 5px 0 0 0;
     display: flex; 
     align-items: center;
+}
+
+.brand{
+    font-family: "Noto Sans", sans-serif;
+    font-size: 20px;
+    color: #337eee;
+    width: fit-content;
+    padding: 3px 10px;
+    font-family: "Mynerve", cursive;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.panel{
+    margin-left: 20px;
+    border-left: 1px solid #fff;
+    padding-left: 20px;
+    font-size: 30px;
+    font-family: "Kings", cursive;
+    color: #fff;
 }
 
 @keyframes slideIn {

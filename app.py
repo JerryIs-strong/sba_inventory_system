@@ -195,7 +195,7 @@ def signup():
                     itg.log(f'[Guest] User "{username}" added')
                     return redirect(url_for('login'))
             else:
-                flash("Weak password is not allowed. Try to set up a <a href='{}'>strong password</a>".format(url_for('static', filename='password_policy.txt')), 'error')
+                flash("Weak password is not allowed. Try to set up a <a href='{}' style='color: var(--message-error-font) !important;'>strong password</a>".format(url_for('static', filename='password_policy.txt')), 'error')
         else:
             flash("Require Username already exists", 'error')
         if from_admin:
