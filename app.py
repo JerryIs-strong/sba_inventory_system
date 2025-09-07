@@ -58,6 +58,10 @@ def inventoryMonitor():
                 json.dump({}, f)
         time.sleep(3600)
 
+#---------------
+#  Page Router
+#--------------- 
+
 @app.route('/', methods=['GET'])
 def home():
     global from_admin
@@ -207,6 +211,7 @@ def signup():
 #---------------
 #     API
 #--------------- 
+
 @app.route('/api/account/update/<type>', methods=['POST'])
 def update_account(type):
     update_state = False
