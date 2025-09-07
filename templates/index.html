@@ -10,7 +10,7 @@
 </head>
 <body>
     <nav>
-        <h3><div class="brand">Paperboat<br> Stationary</div>Welcome back, {{username}}! </h3>
+        <h3><div class="brand" style="cursor: pointer;" onclick="window.location = '/'">Paperboat<br> Stationary</div>Welcome back, {{username}}! </h3>
         <a href="{{url_for('signout')}}" class="signout" title="Signout"><span class="material-symbols-outlined">logout</span></a>
     </nav>
     <div class="inventoryAlert" id="inventoryAlert">
