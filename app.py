@@ -308,7 +308,7 @@ def checkState():
     result = False
     item_name = []
     for item in total_inventory:
-        if item[2] <= 20 and item[2] != -999:
+        if item[2] <= itg.sysInfo()['sys_setting']['low_quantity'] and item[2] != -999:
             result = True
             item_name.append(item[0])
     return jsonify({"result": result, "list": item_name})
