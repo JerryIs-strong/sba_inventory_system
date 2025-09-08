@@ -205,7 +205,7 @@ h1{
 .brand{
     font-family: "Noto Sans", sans-serif;
     font-size: 30px;
-    color: var(--primary-background-color);
+    color: var(--font-color);
     width: fit-content;
     padding: 3px 10px;
     font-family: "Mynerve", cursive;

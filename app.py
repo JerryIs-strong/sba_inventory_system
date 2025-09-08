@@ -179,7 +179,7 @@ def login():
             itg.log(f'[Guest] User "{username}" try to signin into system')
             flash('Username/Password incorrect. Please try again', 'error')
         return redirect(url_for('login'))
-    return render_template('login.html', version=sys_version)
+    return render_template('login.html')
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -206,7 +206,7 @@ def signup():
             return redirect(url_for('admin'))
         else:
             return redirect(url_for('login'))
-    return render_template('signup.html', from_admin=from_admin, version=sys_version)
+    return render_template('signup.html')
 
 #---------------
 #     API
