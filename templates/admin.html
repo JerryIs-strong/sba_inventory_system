@@ -122,6 +122,10 @@
         slider.oninput = function() {
             document.getElementById("lowInvHint").innerText = this.value
         }
+
+        document.addEventListener("contextmenu", function(event) {
+            event.preventDefault();
+        });
     </script>
 </body>
 </html>

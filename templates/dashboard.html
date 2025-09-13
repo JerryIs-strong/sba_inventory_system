@@ -85,15 +85,10 @@
                 }
             }
         }
-        function accDel(action){
-            popConfirm = document.getElementById("popConfirm")
-            if (action == "open"){
-                popConfirm.style.display = "flex";
-                document.getElementById("confirm").placeholder = `Confirm to delete "{{username}}"`
-            }else{
-                popConfirm.style.display = "none";
-            }
-        }
+
+        document.addEventListener("contextmenu", function(event) {
+            event.preventDefault();
+        });
     </script>
 </body>
 </html>
