@@ -3,5 +3,4 @@ pandas
 tabulate
 bcrypt
 colorama
-Flask
-threading
+flask

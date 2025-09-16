@@ -26,7 +26,7 @@
         </div>
         <div class="fill_column">
             <label for="product_price">Price(HKD): </label>
-            <input type="number" name="product_price" id="product_price" min="0" required>
+            <input type="number" name="product_price" id="product_price" min="0" step="0.1" required>
         </div>
         <button type="submit"><span class="material-symbols-outlined btn-icon">add</span>Add</button>
     </form>
@@ -86,14 +86,20 @@
     </div>
     <script>
         const radioInputs = document.querySelectorAll('input[type="radio"]');
-
+        const product_data = document.getElementById("product_data");
         radioInputs.forEach(input => {
             input.addEventListener('change', (e) => {
-                document.getElementById("product_data_lable").innerText = `${e.target.value}: `
+                document.getElementById("product_data_lable").innerText = `${e.target.value}: `;
                 if (e.target.value == "quantity" || e.target.value == "price"){
-                    document.getElementById("product_data").type = "number"
+                    product_data.type = "number";
+                    product_data.min = "0";
+                    if(e.target.value == "price"){
+                        product_data.step = "0.1";
+                    }
                 }else{
-                    document.getElementById("product_data").type = "text"
+                    product_data.type = "text";
+                    product_data.removeAttribute("min");
+                    product_data.removeAttribute("step");
                 }
             });
         });

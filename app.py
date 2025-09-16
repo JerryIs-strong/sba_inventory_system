@@ -15,6 +15,7 @@ timezone = pytz.timezone('Asia/Hong_Kong')
 um = UserManager()
 sys_version = itg.sysInfo()["version"]
 from_admin = False
+low_level = itg.sysInfo()['sys_setting']['low_quantity']
 
 def loadDB():
     global inventory
@@ -46,9 +47,8 @@ def inventoryMonitor():
         total_inventory = getItems()
         file_path = 'static/low_inventory.json'
         low_quantity = []
-        level = itg.sysInfo()['sys_setting']['low_quantity']
         for item in total_inventory:
-            if item[2] <= level and item[2] != -999:
+            if item[2] <= low_level and item[2] != -999:
                 low_quantity.append(item[0])
         with open(file_path, "w") as f:
             if len(low_quantity) > 0:
@@ -138,7 +138,7 @@ def export():
             except Exception as e:
                 flash(f"Error exporting data: {str(e)}", 'error')
                 return redirect(url_for('export'))
-        return render_template("export.html", exportData=os.listdir("exports/"))
+        return render_template("export.html", exportData=[f for f in os.listdir("exports/") if not f.startswith('.')])
     else:
         return redirect(url_for('login'))
 
@@ -161,7 +161,7 @@ def admin():
                     syslog.reverse()
             else:
                 syslog = False
-            return render_template("admin.html", user_list=um.getUserList(), transactions=transactions, syslog=syslog, low_level=itg.sysInfo()['sys_setting']['low_quantity'], sys_running_info=itg.sysInfo())
+            return render_template("admin.html", user_list=um.getUserList(), transactions=transactions, syslog=syslog, low_level=low_level, sys_running_info=itg.sysInfo())
     else:
         return redirect(url_for('login'))
     
@@ -260,7 +260,7 @@ def manageInventory(type):
         inventory[code] = {
             "name": name,
             "quantity": int(quantity),
-            "price": int(price)
+            "price": float(price)
         }
         flash(f"Added item {code} with quantity {quantity} amd price ${price}", 'info')
         itg.log(f"[{code}] ⭕{name} 🔼{quantity} 🔼${price}", True)
@@ -294,14 +294,15 @@ def manageInventory(type):
             flash(f"Updated the quantity of {code} to {int(modify_data)}", 'info')
         elif modify_type == "price":
             init_price = inventory[code]['price']
-            inventory[code]['price'] = int(modify_data)
-            if init_price > int(modify_data):
-                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🔽${init_price - int(modify_data)} --> ${int(modify_data)}", True)
-            elif init_price < int(modify_data):
-                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🔼${int(modify_data) - init_price} --> ${int(modify_data)}", True)
+            current_price = float(modify_data)
+            inventory[code]['price'] = current_price
+            if init_price > current_price:
+                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🔽${init_price - current_price} --> ${current_price}", True)
+            elif init_price < current_price:
+                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🔼${current_price - init_price} --> ${current_price}", True)
             else:
-                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🟡${int(modify_data)}", True)
-            flash(f"Updated the quantity of {code} to {int(modify_data)}", 'info')
+                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🟡${current_price}", True)
+            flash(f"Updated the price of {code} to {current_price}", 'info')
     with open('./data/inventoryDB.json', 'w') as file:
         json.dump(inventory, file)
     itg.writeMD5()
@@ -341,11 +342,13 @@ def downloadAttch(file_name):
 
 @app.route('/api/system/setting', methods=['POST'])
 def updateSysSetting():
+    global low_level
     if request.method == 'POST':
         with open('data/system.json', 'r') as f:
             sysData = json.load(f)
         new_level = request.form.get("lowInvRange")
         sysData["sys_setting"]["low_quantity"] = int(new_level)
+        low_level = int(new_level)
         with open('data/system.json', 'w') as f:
             json.dump(sysData, f)
             flash("Success to update low quantity level", "success")
@@ -376,4 +379,4 @@ if __name__ == "__main__":
     monitor_thread = Thread(target=inventoryMonitor)
     monitor_thread.daemon = True
     monitor_thread.start()
-    app.run(port=5500,debug=True)
+    app.run(port=5500)
