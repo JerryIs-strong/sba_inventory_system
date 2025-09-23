@@ -267,7 +267,7 @@ def manageInventory(type):
     elif type == "remove":
         code = request.form.get("product_remove")
         name = inventory[code]['name']
-        itg.log(f"[{code}] X{name} | -{inventory[code][quantity]} | -${inventory[code][price]}", True)
+        itg.log(f"[{code}] X{name} | -{inventory[code]['quantity']} | -${inventory[code]['price']}", True)
         del inventory[code]
         flash(f'Success to delete item "{code}"', 'success')
     elif type == "update":
@@ -377,7 +377,6 @@ def suspend():
 
 if __name__ == "__main__":
     loadDB()
-    print(inventory['___END']['name'])
     monitor_thread = Thread(target=inventoryMonitor)
     monitor_thread.daemon = True
     monitor_thread.start()
