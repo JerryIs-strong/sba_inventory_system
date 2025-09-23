@@ -263,15 +263,16 @@ def manageInventory(type):
             "price": float(price)
         }
         flash(f"Added item {code} with quantity {quantity} amd price ${price}", 'info')
-        itg.log(f"[{code}] ⭕{name} 🔼{quantity} 🔼${price}", True)
+        itg.log(f"[{code}] +{name} | +{quantity} | +${price}", True)
     elif type == "remove":
         code = request.form.get("product_remove")
         name = inventory[code]['name']
+        itg.log(f"[{code}] X{name} | -{inventory[code][quantity]} | -${inventory[code][price]}", True)
         del inventory[code]
-        itg.log(f"[{code}] ❌{name}", True)
         flash(f'Success to delete item "{code}"', 'success')
     elif type == "update":
         code = request.form.get("product_code")
+        name = inventory[code]['name']
         modify_type = request.form.get("product_type")
         modify_data = request.form.get("product_data")
         if modify_type == "name":
@@ -281,28 +282,28 @@ def manageInventory(type):
                 "price": inventory[code]['price']
             }
             flash(f"Updated the name of {code} to {modify_data}", 'info')
-            itg.log(f"[{code}] ⭕{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🟡${inventory[code]['price']}", True)
+            itg.log(f"[{code}] ※{name} | +0 | +$0", True)
         elif modify_type == "quantity":
             init_quantity = inventory[code]["quantity"]
             inventory[code]["quantity"] = int(modify_data)
             if init_quantity > int(modify_data):
-                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🔽{init_quantity - int(modify_data)} --> {int(modify_data)} 🟡${inventory[code]['price']}", True)
+                itg.log(f"[{code}] {name} | -{init_quantity - int(modify_data)} | +$0", True)
             elif init_quantity < int(modify_data):
-                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🔼{int(modify_data) - init_quantity} --> {int(modify_data)} 🟡${inventory[code]['price']}", True)
+                itg.log(f"[{code}] {name} | +{int(modify_data) - init_quantity} | +$0", True)
             else:
-                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🟡${int(modify_data)}", True)
+                itg.log(f"[{code}] {name} | +0 | +$0", True)
             flash(f"Updated the quantity of {code} to {int(modify_data)}", 'info')
         elif modify_type == "price":
             init_price = inventory[code]['price']
             current_price = float(modify_data)
             inventory[code]['price'] = current_price
             if init_price > current_price:
-                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🔽${init_price - current_price} --> ${current_price}", True)
+                itg.log(f"[{code}] {name} | +0 | -${init_price - current_price}", True)
             elif init_price < current_price:
-                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🔼${current_price - init_price} --> ${current_price}", True)
+                itg.log(f"[{code}] {name} | +0 | +${current_price - init_price}", True)
             else:
-                itg.log(f"[{code}] 🟡{inventory[code]['name']} 🟡{inventory[code]['quantity']} 🟡${current_price}", True)
-            flash(f"Updated the price of {code} to {current_price}", 'info')
+                itg.log(f"[{code}] {name} | +0 | +$0", True)
+            flash(f"Updated the price of {code} to ${current_price}", 'info')
     with open('./data/inventoryDB.json', 'w') as file:
         json.dump(inventory, file)
     itg.writeMD5()
@@ -376,6 +377,7 @@ def suspend():
 
 if __name__ == "__main__":
     loadDB()
+    print(inventory['___END']['name'])
     monitor_thread = Thread(target=inventoryMonitor)
     monitor_thread.daemon = True
     monitor_thread.start()
