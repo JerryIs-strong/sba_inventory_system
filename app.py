@@ -7,6 +7,7 @@ import module.integrity as itg
 from module.userManagement import UserManager
 import time
 from threading import Thread
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = 'super_inventory_system'
@@ -133,7 +134,7 @@ def export():
                 file_path = os.path.join('exports', file_name)
                 df.to_csv(file_path, index=False)
                 flash(f"Successfully to export data at exports/{file_name}", 'success')
-                itg.log(f"[{session["username"]}] Inventory exported")
+                itg.log(f"[{session["username"]}] Inventory exported as {file_name}")
                 return redirect(url_for('export'))
             except Exception as e:
                 flash(f"Error exporting data: {str(e)}", 'error')
@@ -173,10 +174,10 @@ def login():
         if um.logIn(username, password):
             session["username"] = username
             session["group"] = um.getUserGroup(username)
-            itg.log(f'[{session["group"]}] User "{username}" success to sign-in system')
+            itg.log(f'[{session["group"]}] Success to sign-in system')
             return redirect(url_for('home'))
         else:
-            itg.log(f'[Guest] User "{username}" try to signin into system')
+            itg.log(f'[Guest] Try to signin into system')
             flash('Username/Password incorrect. Please try again', 'error')
         return redirect(url_for('login'))
     return render_template('login.html')
@@ -340,6 +341,20 @@ def downloadAttch(file_name):
         return send_file(file_path, as_attachment=True)
     except FileNotFoundError:
         abort(404)
+
+@app.route('/api/fileManager/remove/<file_name>')
+def removeFile(file_name):
+    file_name = secure_filename(file_name)
+    print(file_name)
+    file_path = f'exports/{file_name}'
+    try:
+        os.remove(file_path)
+        itg.log(f'[{session["group"]}] Removed file {file_name}')
+        flash(f"Sucess to remove file {file_name}", 'success')
+        return(redirect(url_for('export')))
+    except Exception:
+        flash("Error removing file", 'error')
+        return(redirect(url_for('export')))
 
 @app.route('/api/system/setting', methods=['POST'])
 def updateSysSetting():
