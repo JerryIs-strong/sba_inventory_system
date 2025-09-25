@@ -310,17 +310,6 @@ def manageInventory(type):
     itg.writeMD5()
     return redirect(url_for("iManagement"))
 
-@app.route('/api/inventory/checkState')
-def checkState():
-    total_inventory = getItems()
-    result = False
-    item_name = []
-    for item in total_inventory:
-        if item[2] <= itg.sysInfo()['sys_setting']['low_quantity'] and item[2] != -999:
-            result = True
-            item_name.append(item[0])
-    return jsonify({"result": result, "list": item_name})
-
 @app.route('/api/account/delete', methods=['POST'])
 def deleteAcc():
     username = request.form.get('username')
@@ -367,7 +356,7 @@ def updateSysSetting():
         low_level = int(new_level)
         with open('data/system.json', 'w') as f:
             json.dump(sysData, f)
-            flash("Success to update low quantity level", "success")
+            flash(f"Success to update low quantity level to {new_level} unit", "success")
     return redirect(url_for('admin'))
 
 @app.route('/signout')

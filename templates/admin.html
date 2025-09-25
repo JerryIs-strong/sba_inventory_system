@@ -68,11 +68,12 @@
             <p class="sysLog">{{activity}}</p>
             {% endfor %}
         {% else %}
-            <p>No Transactions</p>
+            <p>No Log</p>
         {% endif %}
     </div>
     <div class="output" data-fname="Transaction Log(Today)">
         {% if transactions %}
+            <p class="remind">* [Product ID] Product Name | Change in quantity | Change in price</p>  
             {% for transaction in transactions %}
             <p class="sysLog">{{transaction}}</p>
             {% endfor %}
