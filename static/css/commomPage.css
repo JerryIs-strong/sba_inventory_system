@@ -191,36 +191,37 @@ table, td, th {
 }
 
 .slider {
-  -webkit-appearance: none;
-  background: var(--second-background-color);
-  width: 100%;
-  height: 10px;
-  border-radius: 5px;  
-  outline: none;
-  opacity: 0.7;
-  -webkit-transition: .2s;
-  transition: opacity .2s;
-  padding: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    background: var(--second-background-color);
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;  
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+    padding: 0;
 }
 
 .slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%; 
-  background: var(--btn-color);
-  cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%; 
+    background: var(--btn-color);
+    cursor: pointer;
 }
 
 .slider::-moz-range-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%; 
-  background: var(--btn-color);
-  cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%; 
+    background: var(--btn-color);
+    cursor: pointer;
 }
 
 @keyframes slideIn {
