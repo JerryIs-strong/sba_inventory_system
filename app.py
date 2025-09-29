@@ -365,6 +365,7 @@ def signout():
     itg.log(f'[{session["group"]}] User "{session["username"]}" signout the system')
     session.clear()
     from_admin = False
+    flash("Signout sucess", "info")
     return redirect(url_for('login'))
 
 @app.route('/suspend')

@@ -34,14 +34,14 @@ h3 {
 }
 
 .brand {
-    font-family: "Noto Sans", sans-serif;
-    font-size: 12px;
-    background-color: #fff;
-    color: #337eee;
+    font-size: 30px;
+    color: rgba(121, 121, 121, 0.164);
     width: fit-content;
     padding: 3px 10px;
     margin-right: 10px;
     font-family: "Mynerve", cursive;
+    position: absolute;
+    z-index: 1;
 }
 
 nav {
@@ -52,6 +52,7 @@ nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    overflow: hidden;
 }
 
 .sidebar {
@@ -170,11 +171,12 @@ iframe {
 }
 
 .inventoryAlert{
-    background-color: var(--message-warning-background);
+    background-color: #443c1a;
     color: var(--message-warning-font);
     justify-content: center;
     overflow: hidden;
     display: none;
+    z-index: 2;
 }
 
 .inventoryAlert .main_alert{
