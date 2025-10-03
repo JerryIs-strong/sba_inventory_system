@@ -150,10 +150,18 @@ def admin():
             return(redirect(url_for('/')))
         else:
             current_date = datetime.datetime.now(timezone).strftime("%Y_%m_%d")
+            retrieve = []
             if os.path.exists(f'log/transaction/log_{current_date}.txt'):
                 with open(f'log/transaction/log_{current_date}.txt', 'r', encoding='utf-8') as f:
                     transactions = f.readlines()
                     transactions.reverse()
+                    for transaction in transactions:
+                        if "#sales" in transaction:
+                            retrieve.append([transaction.replace(" #sales", ""), "sales"])
+                        elif "#purchase" in transaction:
+                            retrieve.append([transaction.replace(" #purchase", ""), "purchase"])
+                        else:
+                            retrieve.append([transaction, "other"])
             else:
                 transactions = False
             if os.path.exists(f'log/system_log_{current_date}.txt'):
@@ -162,7 +170,7 @@ def admin():
                     syslog.reverse()
             else:
                 syslog = False
-            return render_template("admin.html", user_list=um.getUserList(), transactions=transactions, syslog=syslog, low_level=low_level, sys_running_info=itg.sysInfo())
+            return render_template("admin.html", user_list=um.getUserList(), transactions=retrieve, syslog=syslog, low_level=low_level, sys_running_info=itg.sysInfo())
     else:
         return redirect(url_for('login'))
     
@@ -287,12 +295,13 @@ def manageInventory(type):
         elif modify_type == "quantity":
             init_quantity = inventory[code]["quantity"]
             inventory[code]["quantity"] = int(modify_data)
+            invoiceNote = request.form.get("invoice_data")
             if init_quantity > int(modify_data):
-                itg.log(f"[{code}] {name} | -{init_quantity - int(modify_data)} | +$0", True)
+                itg.log(f"[{code}(#{invoiceNote})] {name} | -{init_quantity - int(modify_data)} | +$0 #sales", True)
             elif init_quantity < int(modify_data):
-                itg.log(f"[{code}] {name} | +{int(modify_data) - init_quantity} | +$0", True)
+                itg.log(f"[{code}(#{invoiceNote})] {name} | +{int(modify_data) - init_quantity} | +$0 #purchase", True)
             else:
-                itg.log(f"[{code}] {name} | +0 | +$0", True)
+                itg.log(f"[{code}(#{invoiceNote})] {name} | +0 | +$0", True)
             flash(f"Updated the quantity of {code} to {int(modify_data)}", 'info')
         elif modify_type == "price":
             init_price = inventory[code]['price']
@@ -372,9 +381,9 @@ def signout():
 def suspend():
     if not itg.verifyMD5():
         if session.get('username'):
-            itg.log(f'[{session["group"]}] "{session["username"]}": System suspend')
+            itg.log(f'[{session["group"]}] System suspend')
         else:
-            itg.log(f'[Gust] "Guest": System suspend')
+            itg.log(f'[Gust] System suspend')
         session.clear()
         return render_template("danger.html")
     else:

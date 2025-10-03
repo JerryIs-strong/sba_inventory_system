@@ -71,6 +71,11 @@
             <label for="product_data" id="product_data_lable" style="text-transform: capitalize;">Name: </label>
             <input type="text" name="product_data" id="product_data" required>
         </div>
+        <div class="fill_column" id="invoice_fill" style="display: none;">
+            <label for="invoice_data" id="invoice_data_lable" style="text-transform: capitalize; margin-right: 5px;">Invoice: #</label>
+            <input type="text" name="invoice_data" id="invoice_data" style="max-width: 100px;" maxlength="10">
+            <div style="margin-left: 5px;">(optional, max 10 digit)</div>
+        </div>
         <button type="submit"><span class="material-symbols-outlined btn-icon">update</span>Update</button>
     </form>
     <div class="snapNoti">
@@ -87,6 +92,7 @@
     <script>
         const radioInputs = document.querySelectorAll('input[type="radio"]');
         const product_data = document.getElementById("product_data");
+        const invoiceInputs = document.getElementById("invoice_fill");
         radioInputs.forEach(input => {
             input.addEventListener('change', (e) => {
                 document.getElementById("product_data_lable").innerText = `${e.target.value}: `;
@@ -94,9 +100,14 @@
                     product_data.type = "number";
                     product_data.min = "0";
                     if(e.target.value == "price"){
-                        product_data.step = "0.1";
+                        invoiceInputs.style.display = "none";
+                        product_data.step = 0.1;
+                    }else{
+                        invoiceInputs.style.display = "flex";
+                        product_data.step = 1
                     }
                 }else{
+                    invoiceInputs.style.display = "none";
                     product_data.type = "text";
                     product_data.removeAttribute("min");
                     product_data.removeAttribute("step");

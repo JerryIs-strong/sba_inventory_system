@@ -72,14 +72,20 @@
         {% endif %}
     </div>
     <div class="output" data-fname="Transaction Log(Today)">
-        {% if transactions %}
-            <p class="remind">* [Product ID] Product Name | Change in quantity | Change in price</p>  
-            {% for transaction in transactions %}
-            <p class="sysLog">{{transaction}}</p>
-            {% endfor %}
-        {% else %}
-            <p>No Transactions</p>
-        {% endif %}
+{% if transactions %}
+    <p class="remind">* [Product ID(#Invoice note)] Product Name | Change in quantity | Change in price</p>  
+    {% for transaction in transactions %}
+            {% if transaction[1] == "sales" %}
+                <div class="sysLog" style="display: flex; margin: 10px 0;"><div style="background-color: var(--message-success-background); margin-right: 10px; border-radius: 10PX; padding: 0 5px; color: var(--message-success-font);">{{ transaction[1] }}</div> {{ transaction[0] }}</div>
+            {% elif transaction[1] == "purchase" %}
+                <div class="sysLog" style="display: flex; margin: 10px 0;"><div style="background-color: var(--message-error-background); margin-right: 10px; border-radius: 10PX; padding: 0 5px; color: var(--message-error-font);">{{ transaction[1] }}</div> {{ transaction[0] }}</div>
+            {% else %}
+                <div class="sysLog" style="display: flex; margin: 10px 0;"><div style="background-color: var(--message-info-background); margin-right: 10px; border-radius: 10PX; padding: 0 5px; color: var(--message-info-font);">{{ transaction[1] }}</div> {{ transaction[0] }}</div>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <p>No Transactions</p>
+    {% endif %}
     </div>
     <div class="output" data-fname="System Running Information">
         <div style="display: flex; margin: 0 0 10px 0; justify-content: space-between;">Inventory System Version: <div style="color: var(--theme-color); background-color: #2d52a54a; width: fit-content; padding: 2px 10px; border-radius: 30px; margin-left: 10px;">{{sys_running_info['version']}}</div></div>
