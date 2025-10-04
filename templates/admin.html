@@ -75,9 +75,9 @@
 {% if transactions %}
     <p class="remind">* [Product ID(#Invoice note)] Product Name | Change in quantity | Change in price</p>  
     {% for transaction in transactions %}
-            {% if transaction[1] == "sales" %}
+            {% if transaction[1] == "Sales" or transaction[1] == "New" or transaction[1] == "Price Up" %}
                 <div class="sysLog" style="display: flex; margin: 10px 0;"><div style="background-color: var(--message-success-background); margin-right: 10px; border-radius: 10PX; padding: 0 5px; color: var(--message-success-font);">{{ transaction[1] }}</div> {{ transaction[0] }}</div>
-            {% elif transaction[1] == "purchase" %}
+            {% elif transaction[1] == "Purchase" or transaction[1] == "Removed" or transaction[1] == "Price Down" %}
                 <div class="sysLog" style="display: flex; margin: 10px 0;"><div style="background-color: var(--message-error-background); margin-right: 10px; border-radius: 10PX; padding: 0 5px; color: var(--message-error-font);">{{ transaction[1] }}</div> {{ transaction[0] }}</div>
             {% else %}
                 <div class="sysLog" style="display: flex; margin: 10px 0;"><div style="background-color: var(--message-info-background); margin-right: 10px; border-radius: 10PX; padding: 0 5px; color: var(--message-info-font);">{{ transaction[1] }}</div> {{ transaction[0] }}</div>

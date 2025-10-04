@@ -155,13 +155,17 @@ def admin():
                 with open(f'log/transaction/log_{current_date}.txt', 'r', encoding='utf-8') as f:
                     transactions = f.readlines()
                     transactions.reverse()
+                    transaction_tag = ["#sales", "#purchase", "#price_up", "#price_down", "#rename", "#new", "#remove"]
+                    tag_name = ["Sales", "Purchase", "Price Up", "Price Down", "Rename", "New", "Removed"]
                     for transaction in transactions:
-                        if "#sales" in transaction:
-                            retrieve.append([transaction.replace(" #sales", ""), "sales"])
-                        elif "#purchase" in transaction:
-                            retrieve.append([transaction.replace(" #purchase", ""), "purchase"])
-                        else:
-                            retrieve.append([transaction, "other"])
+                        categorized = False
+                        for i in transaction.split(" "):
+                            if i.replace("\n", "") in transaction_tag:
+                                retrieve.append([transaction.replace(f" {i}", ""), tag_name[transaction_tag.index(i.replace("\n", ""))]])
+                                categorized = True
+                                break
+                        if not categorized:
+                            retrieve.append([transaction, "Other"])
             else:
                 transactions = False
             if os.path.exists(f'log/system_log_{current_date}.txt'):
@@ -272,11 +276,11 @@ def manageInventory(type):
             "price": float(price)
         }
         flash(f"Added item {code} with quantity {quantity} amd price ${price}", 'info')
-        itg.log(f"[{code}] +{name} | +{quantity} | +${price}", True)
+        itg.log(f"[{code}] {name} | +{quantity} | +${price} #new", True)
     elif type == "remove":
         code = request.form.get("product_remove")
         name = inventory[code]['name']
-        itg.log(f"[{code}] X{name} | -{inventory[code]['quantity']} | -${inventory[code]['price']}", True)
+        itg.log(f"[{code}] {name} | -{inventory[code]['quantity']} | -${inventory[code]['price']} #remove", True)
         del inventory[code]
         flash(f'Success to delete item "{code}"', 'success')
     elif type == "update":
@@ -285,35 +289,43 @@ def manageInventory(type):
         modify_type = request.form.get("product_type")
         modify_data = request.form.get("product_data")
         if modify_type == "name":
-            inventory[code] = {
-                "name": modify_data,
-                "quantity": inventory[code]['quantity'],
-                "price": inventory[code]['price']
-            }
-            flash(f"Updated the name of {code} to {modify_data}", 'info')
-            itg.log(f"[{code}] ※{name} | +0 | +$0", True)
+            if modify_data == name:
+                flash(f"Nothing to be change", 'error')
+                return redirect(url_for("iManagement"))
+            else:
+                inventory[code] = {
+                    "name": modify_data,
+                    "quantity": inventory[code]['quantity'],
+                    "price": inventory[code]['price']
+                }
+                flash(f"Updated the name of {code} to {modify_data}", 'info')
+                itg.log(f"[{code}] ※{name} | +0 | +$0 #rename", True)
         elif modify_type == "quantity":
             init_quantity = inventory[code]["quantity"]
-            inventory[code]["quantity"] = int(modify_data)
-            invoiceNote = request.form.get("invoice_data")
-            if init_quantity > int(modify_data):
-                itg.log(f"[{code}(#{invoiceNote})] {name} | -{init_quantity - int(modify_data)} | +$0 #sales", True)
-            elif init_quantity < int(modify_data):
-                itg.log(f"[{code}(#{invoiceNote})] {name} | +{int(modify_data) - init_quantity} | +$0 #purchase", True)
+            if float(modify_data) == float(init_quantity):
+                flash(f"Nothing to be change", 'error')
+                return redirect(url_for("iManagement"))
             else:
-                itg.log(f"[{code}(#{invoiceNote})] {name} | +0 | +$0", True)
-            flash(f"Updated the quantity of {code} to {int(modify_data)}", 'info')
+                inventory[code]["quantity"] = int(modify_data)
+                invoiceNote = request.form.get("invoice_data")
+                if init_quantity > int(modify_data):
+                    itg.log(f"[{code}(#{invoiceNote})] {name} | -{init_quantity - int(modify_data)} | +$0 #sales", True)
+                elif init_quantity < int(modify_data):
+                    itg.log(f"[{code}(#{invoiceNote})] {name} | +{int(modify_data) - init_quantity} | +$0 #purchase", True)
+                flash(f"Updated the quantity of {code} to {int(modify_data)}", 'info')
         elif modify_type == "price":
             init_price = inventory[code]['price']
-            current_price = float(modify_data)
-            inventory[code]['price'] = current_price
-            if init_price > current_price:
-                itg.log(f"[{code}] {name} | +0 | -${init_price - current_price}", True)
-            elif init_price < current_price:
-                itg.log(f"[{code}] {name} | +0 | +${current_price - init_price}", True)
+            if float(modify_data) == float(init_price):
+                flash(f"Nothing to be change", 'error')
+                return redirect(url_for("iManagement"))
             else:
-                itg.log(f"[{code}] {name} | +0 | +$0", True)
-            flash(f"Updated the price of {code} to ${current_price}", 'info')
+                current_price = float(modify_data)
+                inventory[code]['price'] = current_price
+                if init_price > current_price:
+                    itg.log(f"[{code}] {name} | +0 | -${init_price - current_price} #price_down", True)
+                elif init_price < current_price:
+                    itg.log(f"[{code}] {name} | +0 | +${current_price - init_price} #price_up", True)
+                flash(f"Updated the price of {code} to ${current_price}", 'info')
     with open('./data/inventoryDB.json', 'w') as file:
         json.dump(inventory, file)
     itg.writeMD5()
