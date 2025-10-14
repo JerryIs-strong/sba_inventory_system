@@ -10,6 +10,9 @@
 3. The program should be running on port ```:5500``` 
 4. So, you can open the system pannel with your prefence browser with ```http://127.0.0.1:5500```
 
+> [!TIP]
+> After updating the inventory, it is normal that the low inventory alert does not automatically update, because the low inventory alert is updated every half hour.
+
 ## Test
 1️⃣Sample Account \
 [Admin] 
