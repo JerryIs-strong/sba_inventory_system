@@ -3,6 +3,7 @@
 ## Start
 > [!WARNING]
 > Before running this program, please don't forget to install the dependency first with ```pip install -r requirements.txt```
+
 > [!TIP]
 > After updating the inventory, it is normal that the low inventory alert does not automatically update, because the low inventory alert is updated every half hour.
 
