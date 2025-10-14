@@ -8,6 +8,7 @@ from module.userManagement import UserManager
 import time
 from threading import Thread
 from werkzeug.utils import secure_filename
+import webbrowser
 
 app = Flask(__name__)
 app.secret_key = 'super_inventory_system'
@@ -403,6 +404,7 @@ def suspend():
 
 if __name__ == "__main__":
     loadDB()
+    webbrowser.open("http://localhost:5500/")
     monitor_thread = Thread(target=inventoryMonitor)
     monitor_thread.daemon = True
     monitor_thread.start()
