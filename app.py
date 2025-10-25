@@ -10,6 +10,9 @@ from threading import Thread
 from werkzeug.utils import secure_filename
 import webbrowser
 
+# TODO: Add EZ Mode for sales and purchase 
+# TODO: Complete commant
+
 app = Flask(__name__)
 app.secret_key = 'super_inventory_system'
 inventory = {}
